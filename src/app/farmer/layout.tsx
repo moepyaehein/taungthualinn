@@ -9,9 +9,10 @@ import ChatAssistant from '../components/ChatAssistant';
 const farmerNav = [
   { href: '/farmer', label: 'ပင်မစာမျက်နှာ', icon: '<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>' },
   { href: '/farmer/market', label: 'စျေးနှုန်းများ', icon: '<path d="M3 3h18v18H3z"/><path d="M3 9h18M9 3v18"/>' },
-  { href: '/farmer/recommendation', label: 'AI အကြံပြု', icon: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>' },
+  { href: '/farmer/recommendation', label: 'AI ခန့်မှန်း', icon: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>' },
+  { href: '/farmer/trade', label: 'အရောင်းအဝယ်', icon: '<path d="M8 7L20 7M20 7L16 3M20 7L16 11M16 17L4 17M4 17L8 21M4 17L8 13"/>' },
+  { href: '/farmer/records', label: 'သတိပေးချက်များ', icon: '<path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/>' },
   { href: '/farmer/emergency', label: 'အရေးပေါ်', icon: '<path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>', emergency: true },
-  { href: '/farmer/records', label: 'မှတ်တမ်းများ', icon: '<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>' },
 ];
 
 export default function FarmerLayout({ children }: { children: React.ReactNode }) {

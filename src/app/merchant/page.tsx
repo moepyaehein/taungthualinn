@@ -20,7 +20,7 @@ export default function MerchantHomePage() {
       <h2 className="section-title mb-md">မြန်ဆန်လုပ်ဆောင်ချက်</h2>
       <div className="quick-actions-grid mb-lg">
         <Link href="/merchant/price" className="btn btn-primary">စျေးတင်ရန်</Link>
-        <Link href="/merchant/bulk" className="btn btn-primary">အစုလိုက်တင်ရန်</Link>
+        <Link href="/merchant/recommendation" className="btn btn-merchant">AI အကြံပြု</Link>
         <Link href="/merchant/listings" className="btn btn-primary">ကမ်းလှမ်းချက်အသစ်</Link>
         <Link href="/merchant/verify" className="btn btn-primary">စျေးအတည်ပြုရန်</Link>
         <Link href="/merchant/emergency" className="btn btn-danger">အရေးပေါ်ဝယ်ရန်</Link>

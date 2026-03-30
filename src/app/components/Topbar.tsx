@@ -22,14 +22,12 @@ export default function Topbar({ role = 'farmer', userName, userInitial, locatio
           <Image src="/logo.png" alt="TaungThu Alin" width={32} height={32} style={{ objectFit: 'contain' }} />
           တောင်သူအလင်း
         </Link>
-        <div className="topbar-location">
-          {role === 'admin' ? (
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
-          ) : (
+        {role !== 'admin' && (
+          <div className="topbar-location">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" /></svg>
-          )}
-          <span>{locationText}</span>
-        </div>
+            <span>{locationText}</span>
+          </div>
+        )}
       </div>
       <div className="topbar-right">
         {role === 'admin' && (

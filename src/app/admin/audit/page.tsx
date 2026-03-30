@@ -18,7 +18,7 @@ export default function AuditPage() {
           { text: 'Admin — ကုန်သည်အသစ် "ကုမ္ပဏီ ABC" အကောင့်ခွင့်ပြုခဲ့', time: 'မတ် 26, နံနက် 11:00' },
         ].map((item, i) => (
           <div key={i} className="audit-row">
-            <div><strong>{item.text.split(' — ')[၀]}</strong> — {item.text.split(' — ')[၁]}<br /><span style={{ color: 'var(--gray-400)', fontSize: 'var(--font-xs)' }}>{item.time}</span></div>
+            <div><strong>{item.text.split(' — ')[0]}</strong> — {item.text.split(' — ')[1]}<br /><span style={{ color: 'var(--gray-400)', fontSize: 'var(--font-xs)' }}>{item.time}</span></div>
           </div>
         ))}
       </div>

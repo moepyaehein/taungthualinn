@@ -1,19 +1,10 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 
-interface LogoSVGProps {
-  color?: string;
-}
-
-const LogoSVG = ({ color = '#059669' }: LogoSVGProps) => (
-  <svg viewBox="0 0 32 32" fill="none">
-    <circle cx="16" cy="16" r="15" fill={color} />
-    <path d="M16 6c-1 4-4 7-4 12a4 4 0 008 0c0-5-3-8-4-12z" fill="#fff" />
-    <path d="M12 20c2-1 4-1 6-1" stroke="#fff" strokeWidth="1.5" />
-  </svg>
-);
-
+// The LogoSVG has been replaced by an image tag using next/image below
+// You will need to save your logo image as 'logo.png' in the public/ folder
 interface TopbarProps {
   role?: string;
   userName: string;
@@ -28,7 +19,7 @@ export default function Topbar({ role = 'farmer', userName, userInitial, locatio
     <header className="topbar">
       <div className="topbar-left">
         <Link href="/" className="topbar-logo">
-          <LogoSVG color="#059669" />
+          <Image src="/logo.png" alt="TaungThu Alin" width={32} height={32} style={{ objectFit: 'contain' }} />
           တောင်သူအလင်း
         </Link>
         <div className="topbar-location">

@@ -20,10 +20,9 @@ export default function AdminHomePage() {
         <div className="card">
           <div className="card-title mb-md">မြန်ဆန်လုပ်ဆောင်ချက်</div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-            <Link href="/admin/verify" className="btn btn-primary">စျေးစစ်ဆေးရန်</Link>
             <Link href="/admin/bulk" className="btn btn-primary">Upload စစ်ရန်</Link>
             <Link href="/admin/categories" className="btn btn-primary">အမျိုးအစားစီမံ</Link>
-            <Link href="/admin/emergency" className="btn btn-danger">အရေးပေါ်</Link>
+            <Link href="/admin/emergency" className="btn btn-danger" style={{ gridColumn: '1 / -1' }}>အရေးပေါ်</Link>
           </div>
         </div>
         <div className="card">

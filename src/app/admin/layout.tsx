@@ -41,7 +41,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--gray-500)', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>ကိုယ်ရေးအချက်အလက်</div>
           <div className="form-group mb-md"><label className="form-label" style={{ color: 'var(--gray-600)' }}>အမည်</label><input className="form-input" style={{ background: '#fff', border: '1px solid var(--gray-300)', borderRadius: '10px' }} defaultValue="Platform Admin" /></div>
           <div className="form-group mb-md"><label className="form-label" style={{ color: 'var(--gray-600)' }}>ရာထူး</label><input className="form-input" style={{ background: '#fff', border: '1px solid var(--gray-300)', borderRadius: '10px' }} defaultValue="Chief Administrator" /></div>
-          <div className="form-group mb-md"><label className="form-label" style={{ color: 'var(--gray-600)' }}>ဖုန်းနံပါတ်</label><input className="form-input" style={{ background: '#fff', border: '1px solid var(--gray-300)', borderRadius: '10px' }} defaultValue="09-111-222-333" /></div>
+          <div className="form-group mb-md"><label className="form-label" style={{ color: 'var(--gray-600)' }}>ဖုန်းနံပါတ်</label><input className="form-input" style={{ background: '#fff', border: '1px solid var(--gray-300)', borderRadius: '10px' }} defaultValue="၀၉-၁၁၁-၂၂၂-၃၃၃" /></div>
           <div className="form-group m-0"><label className="form-label" style={{ color: 'var(--gray-600)' }}>အီးမေးလ်</label><input className="form-input" style={{ background: '#fff', border: '1px solid var(--gray-300)', borderRadius: '10px' }} defaultValue="admin@taungthu.mm" /></div>
         </div>
 

@@ -126,10 +126,10 @@ const aiData: Record<string, AIRecommendation> = {
     forecast30d: { direction: 'up', label: 'ဆက်တက်နိုင်', confidence: '70%' },
     action: 'buy',
     actionLabel: 'အမြန်ဝယ်ပါ',
-    reason: 'ပဲတီစိမ်းစျေး အိန္ဒိယဝယ်လိုအား မြင့်တက်မှုကြောင့် လျင်မြန်စွာ တက်နေပါသည်။ ယခုဝယ်ပါက အမြတ်ကောင်း ရနိုင်ပါသည်။',
+    reason: 'ပဲတီစိမ်းစျေး ပြည်တွင်းဝယ်လိုအား မြင့်တက်မှုကြောင့် လျင်မြန်စွာ တက်နေပါသည်။ ယခုဝယ်ပါက အမြတ်ကောင်း ရနိုင်ပါသည်။',
     insights: [
-      { color: 'var(--trend-up)', title: 'နိုင်ငံတကာ ဝယ်လိုအား', text: 'အိန္ဒိယ အစိုးရ ပဲတင်သွင်းခွင့်ပြုမှု တိုးမြှင့်ထားပါသည်။' },
-      { color: 'var(--info)', title: 'ကမ္ဘာ့စျေး', text: 'ကမ္ဘာ့ပဲတီစိမ်းစျေး လွန်ခဲ့သည့် ၃ နှစ်အတွင်း အမြင့်ဆုံးဖြစ်ပါသည်။' },
+      { color: 'var(--trend-up)', title: 'ပြည်တွင်း ဝယ်လိုအား', text: 'ပြည်တွင်း စျေးကွက် လိုအပ်ချက် တိုးမြှင့်ထားပါသည်။' },
+      { color: 'var(--info)', title: 'ပြည်တွင်းစျေး', text: 'ပြည်တွင်းပဲတီစိမ်းစျေး လွန်ခဲ့သည့် ၃ နှစ်အတွင်း အမြင့်ဆုံးဖြစ်ပါသည်။' },
       { color: 'var(--earth-500)', title: 'ပမာဏ', text: 'တင်ပို့ရန် ပဲပမာဏ လိုအပ်ချက် မြင့်မားနေပါသည်။' },
       { color: 'var(--warning)', title: 'ယှဉ်ပြိုင်မှု', text: 'အခြား ကုန်သည်များလည်း ဝယ်ယူမှု တိုးခြင်းရှိပါသည်။' },
     ],
@@ -148,7 +148,7 @@ const aiData: Record<string, AIRecommendation> = {
     insights: [
       { color: 'var(--trend-stable)', title: 'စျေးတည်ငြိမ်', text: 'လက်ရှိ ရောင်းလိုအားနှင့် ဝယ်လိုအား ညီမျှနေပါသည်။' },
       { color: 'var(--info)', title: 'ရာသီခြေအနေ', text: 'ရိတ်သိမ်းချိန် ကုန်ဆုံးသဖြင့် ပမာဏ တည်ငြိမ်ပါသည်။' },
-      { color: 'var(--earth-500)', title: 'တင်ပို့လမ်းကြောင်း', text: 'အိန္ဒိယသို့ တင်ပို့ခွင့် ထပ်မံတိုးနိုင်ပါသည်။' },
+      { color: 'var(--earth-500)', title: 'ပြည်တွင်းလမ်းကြောင်း', text: 'ပြည်တွင်း ရောင်းဝယ်မှု ထပ်မံတိုးနိုင်ပါသည်။' },
       { color: 'var(--warning)', title: 'စျေးပြောင်းလဲမှု', text: 'ရုတ်တရက် ပြောင်းလဲနိုင်ခြေ ရှိသဖြင့် သတိထားပါ။' },
     ],
     bestBuyPrice: '53,500 - 54,800 ကျပ်',
@@ -222,7 +222,7 @@ export default function MerchantRecommendationPage() {
             alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-xs)',
             fontWeight: 700, color: '#fff',
             background: selectedCategory ? 'var(--primary-600)' : 'var(--gray-400)',
-          }}>1</span>
+          }}>၁</span>
           သီးနှံ အမျိုးအစား ရွေးချယ်ပါ
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
@@ -265,7 +265,7 @@ export default function MerchantRecommendationPage() {
               alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-xs)',
               fontWeight: 700, color: '#fff',
               background: selectedProduct ? 'var(--primary-600)' : 'var(--gray-400)',
-            }}>2</span>
+            }}>၂</span>
             {category.icon} {category.name} — ထုတ်ကုန် ရွေးချယ်ပါ
           </div>
           <div className="grid-4" style={{ gap: '12px' }}>
@@ -323,7 +323,7 @@ export default function MerchantRecommendationPage() {
             AI ခွဲခြမ်းစိတ်ဖြာနေသည်...
           </div>
           <div style={{ color: 'var(--gray-500)', fontSize: 'var(--font-sm)' }}>
-            စျေးကွက်ဒေတာ၊ ရာသီဥတုနှင့် ကမ္ဘာ့စျေးကို တွက်ချက်နေပါသည်
+            စျေးကွက်ဒေတာ၊ ရာသီဥတုနှင့် ပြည်တွင်းစျေးကို တွက်ချက်နေပါသည်
           </div>
           <div style={{
             marginTop: 'var(--space-lg)', height: 4, background: 'var(--gray-200)',
@@ -390,10 +390,10 @@ export default function MerchantRecommendationPage() {
                 {directionArrow[rec.trend7d.direction]}
               </div>
               <div className="forecast-label">{directionLabel[rec.trend7d.direction]}</div>
-              <div className="forecast-confidence">ယခင် 7 ရက်: {rec.trend7d.pct}</div>
+              <div className="forecast-confidence">ယခင် ၇ ရက်: {rec.trend7d.pct}</div>
             </div>
             <div className="forecast-card">
-              <div className="forecast-period">လာမည့် 7 ရက် ခန့်မှန်း</div>
+              <div className="forecast-period">လာမည့် ၇ ရက် ခန့်မှန်း</div>
               <div className={`forecast-direction ${rec.forecast7d.direction}`}>
                 {directionArrow[rec.forecast7d.direction]}
               </div>
@@ -401,7 +401,7 @@ export default function MerchantRecommendationPage() {
               <div className="forecast-confidence">ယုံကြည်မှု: {rec.forecast7d.confidence}</div>
             </div>
             <div className="forecast-card">
-              <div className="forecast-period">လာမည့် 30 ရက် ခန့်မှန်း</div>
+              <div className="forecast-period">လာမည့် ၃၀ ရက် ခန့်မှန်း</div>
               <div className={`forecast-direction ${rec.forecast30d.direction}`}>
                 {directionArrow[rec.forecast30d.direction]}
               </div>
@@ -517,7 +517,7 @@ export default function MerchantRecommendationPage() {
             AI ဝယ်ယူမှု ပညာရှင်
           </div>
           <div style={{ color: 'var(--gray-500)', fontSize: 'var(--font-sm)', maxWidth: 400, margin: '0 auto', lineHeight: 1.8 }}>
-            အထက်ပါ သီးနှံအမျိုးအစားတစ်ခုကို ရွေးချယ်ပါ။ AI စနစ်မှ စျေးကွက်ခေတ်ရေစီးကြောင်း၊ ရာသီဥတုနှင့် ကမ္ဘာ့ဈေးကွက်ဒေတာကို ခွဲခြမ်းစိတ်ဖြာပြီး ဝယ်ယူရေး အကြံပြုချက် ပေးပါမည်။
+            အထက်ပါ သီးနှံအမျိုးအစားတစ်ခုကို ရွေးချယ်ပါ။ AI စနစ်မှ စျေးကွက်ခေတ်ရေစီးကြောင်း၊ ရာသီဥတုနှင့် ပြည်တွင်းဈေးကွက်ဒေတာကို ခွဲခြမ်းစိတ်ဖြာပြီး ဝယ်ယူရေး အကြံပြုချက် ပေးပါမည်။
           </div>
         </div>
       )}

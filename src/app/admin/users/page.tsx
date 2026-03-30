@@ -15,7 +15,7 @@ export default function UsersPage() {
           <tr><td>ဦးအောင်မြင့်</td><td>တောင်သူ</td><td>မန္တလေး</td><td><span className="verify-badge verified">တက်ကြွ</span></td><td>ယနေ့</td><td><button className="btn btn-sm btn-outline">ကြည့်</button></td></tr>
           <tr><td>ဦးကျော်မင်း</td><td>ကုန်သည်</td><td>မန္တလေး</td><td><span className="verify-badge verified">တက်ကြွ</span></td><td>ယနေ့</td><td><button className="btn btn-sm btn-outline">ကြည့်</button></td></tr>
           <tr><td>ဒေါ်ခင်လှိုင်</td><td>ကုန်သည်</td><td>မိတ္ထီလာ</td><td><span className="verify-badge verified">တက်ကြွ</span></td><td>ယမန်နေ့</td><td><button className="btn btn-sm btn-outline">ကြည့်</button></td></tr>
-          <tr><td>ဦးသန်းဝင်း</td><td>ကုန်သည်</td><td>စစ်ကိုင်း</td><td><span className="verify-badge flagged">သတိပေး</span></td><td>ရက် 3 က</td><td><button className="btn btn-sm btn-outline">ကြည့်</button> <button className="btn btn-sm btn-danger">ပယ်</button></td></tr>
+          <tr><td>ဦးသန်းဝင်း</td><td>ကုန်သည်</td><td>စစ်ကိုင်း</td><td><span className="verify-badge flagged">သတိပေး</span></td><td>ရက် ၃ က</td><td><button className="btn btn-sm btn-outline">ကြည့်</button> <button className="btn btn-sm btn-danger">ပယ်</button></td></tr>
         </tbody>
       </table></div></div>
     </div>

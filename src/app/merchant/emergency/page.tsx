@@ -14,8 +14,8 @@ export default function MerchantEmergencyPage() {
         <div className="card-title mb-md">သင့်အနေဖြင့် အရေးပေါ်ဝယ်ယူနိုင်ပါသလား?</div>
         <div className="grid-2" style={{ gap: 'var(--space-sm)' }}>
           <div className="form-group"><label className="form-label">ဝယ်ယူနိုင်သော ထုတ်ကုန်</label><select className="form-select"><option>နှမ်း</option><option>ပဲတီစိမ်း</option><option>မြေပဲ</option></select></div>
-          <div className="form-group"><label className="form-label">ဝယ်ယူနိုင်သော ပမာဏ (တင်း)</label><input type="number" className="form-input" placeholder="ဥပမာ - 200" /></div>
-          <div className="form-group"><label className="form-label">ဝယ်ယူမည့် စျေးနှုန်း (Ks)</label><input type="number" className="form-input" placeholder="ဥပမာ - 48,000" /></div>
+          <div className="form-group"><label className="form-label">ဝယ်ယူနိုင်သော ပမာဏ (တင်း)</label><input type="number" className="form-input" placeholder="ဥပမာ - ၂၀၀" /></div>
+          <div className="form-group"><label className="form-label">ဝယ်ယူမည့် စျေးနှုန်း (Ks)</label><input type="number" className="form-input" placeholder="ဥပမာ - ၄၈,၀၀၀" /></div>
           <div className="form-group"><label className="form-label">တည်နေရာ</label><select className="form-select"><option>မန္တလေး</option><option>မိတ္ထီလာ</option><option>ပြင်ဦးလွင်</option></select></div>
         </div>
         <div className="flex gap-md items-center mb-md">
@@ -27,8 +27,8 @@ export default function MerchantEmergencyPage() {
 
       <div className="card mb-lg">
         <div className="card-title mb-md">ပျက်စီးနိုင်သော သီးနှံတောင်းဆိုမှုများ</div>
-        <div className="buyer-card"><div className="buyer-avatar" style={{ background: 'var(--danger)' }}>ရ</div><div className="buyer-info"><div className="buyer-name">ရှမ်းမြောက် — နှမ်း 300 တင်း</div><div className="buyer-detail">မိုးကြောင့် သယ်ယူမရ • 3 ရက်အတွင်း ရောင်းရန်လို</div></div><button className="btn btn-danger btn-sm">လက်ခံရန်</button></div>
-        <div className="buyer-card"><div className="buyer-avatar" style={{ background: 'var(--warning)' }}>ရ</div><div className="buyer-info"><div className="buyer-name">ရှမ်းမြောက် — ပဲ 200 တင်း</div><div className="buyer-detail">စိုထိုင်းနိုင်ခြေရှိ • 5 ရက်အတွင်း</div></div><button className="btn btn-danger btn-sm">လက်ခံရန်</button></div>
+        <div className="buyer-card"><div className="buyer-avatar" style={{ background: 'var(--danger)' }}>ရ</div><div className="buyer-info"><div className="buyer-name">ရှမ်းမြောက် — နှမ်း ၃၀၀ တင်း</div><div className="buyer-detail">မိုးကြောင့် သယ်ယူမရ • ၃ ရက်အတွင်း ရောင်းရန်လို</div></div><button className="btn btn-danger btn-sm">လက်ခံရန်</button></div>
+        <div className="buyer-card"><div className="buyer-avatar" style={{ background: 'var(--warning)' }}>ရ</div><div className="buyer-info"><div className="buyer-name">ရှမ်းမြောက် — ပဲ ၂၀၀ တင်း</div><div className="buyer-detail">စိုထိုင်းနိုင်ခြေရှိ • ၅ ရက်အတွင်း</div></div><button className="btn btn-danger btn-sm">လက်ခံရန်</button></div>
       </div>
 
       <div className="card">

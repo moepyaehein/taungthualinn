@@ -11,7 +11,7 @@ export default function EmergencyPage() {
         <div className="flex items-center gap-md mb-md">
           <div>
             <div style={{ fontWeight: 700, fontSize: 'var(--font-lg)', color: '#991b1b' }}>မိုးသည်းထန်မှု သတိပေးချက်</div>
-            <div style={{ color: '#991b1b', fontSize: 'var(--font-sm)' }}>ရှမ်းပြည်နယ်မြောက်ပိုင်း — ဧပြီ 1-5 ရက်</div>
+            <div style={{ color: '#991b1b', fontSize: 'var(--font-sm)' }}>ရှမ်းပြည်နယ်မြောက်ပိုင်း — ဧပြီ ၁-၅ ရက်</div>
           </div>
           <span className="risk-badge high" style={{ marginLeft: 'auto' }}>အန္တရာယ်မြင့်</span>
         </div>
@@ -24,19 +24,19 @@ export default function EmergencyPage() {
         {/* Risk Timeline */}
         <div className="card">
           <div className="card-title mb-md">အန္တရာယ်ကာလ</div>
-          <div className="timeline-item"><div className="timeline-dot red"></div><div><div style={{ fontWeight: 600 }}>ဧပြီ 1-3 ရက်</div><div style={{ fontSize: 'var(--font-sm)', color: 'var(--gray-500)' }}>မိုးသည်းထန်နိုင် — ရှမ်းမြောက်</div></div></div>
-          <div className="timeline-item"><div className="timeline-dot yellow"></div><div><div style={{ fontWeight: 600 }}>ဧပြီ 4-5 ရက်</div><div style={{ fontSize: 'var(--font-sm)', color: 'var(--gray-500)' }}>မိုးတိမ်များ — မန္တလေး</div></div></div>
-          <div className="timeline-item"><div className="timeline-dot green"></div><div><div style={{ fontWeight: 600 }}>ဧပြီ 6 ရက်နောက်ပိုင်း</div><div style={{ fontSize: 'var(--font-sm)', color: 'var(--gray-500)' }}>ရာသီဥတု ပြန်ကောင်းလာနိုင်</div></div></div>
+          <div className="timeline-item"><div className="timeline-dot red"></div><div><div style={{ fontWeight: 600 }}>ဧပြီ ၁-၃ ရက်</div><div style={{ fontSize: 'var(--font-sm)', color: 'var(--gray-500)' }}>မိုးသည်းထန်နိုင် — ရှမ်းမြောက်</div></div></div>
+          <div className="timeline-item"><div className="timeline-dot yellow"></div><div><div style={{ fontWeight: 600 }}>ဧပြီ ၄-၅ ရက်</div><div style={{ fontSize: 'var(--font-sm)', color: 'var(--gray-500)' }}>မိုးတိမ်များ — မန္တလေး</div></div></div>
+          <div className="timeline-item"><div className="timeline-dot green"></div><div><div style={{ fontWeight: 600 }}>ဧပြီ ၆ ရက်နောက်ပိုင်း</div><div style={{ fontSize: 'var(--font-sm)', color: 'var(--gray-500)' }}>ရာသီဥတု ပြန်ကောင်းလာနိုင်</div></div></div>
         </div>
 
         {/* Price Shock */}
         <div className="card">
           <div className="card-title mb-md">စျေးနှုန်းခုန်ချမှု ကာကွယ်ရေး</div>
-          <div className="alert-banner warning mb-md"><span>ရှမ်းပြည်နယ်တွင် နှမ်းစျေး 8% ကျဆင်းနေပါသည်</span></div>
+          <div className="alert-banner warning mb-md"><span>ရှမ်းပြည်နယ်တွင် နှမ်းစျေး ၈% ကျဆင်းနေပါသည်</span></div>
           <div style={{ fontSize: 'var(--font-sm)' }}>
-            <div className="flex justify-between mb-md" style={{ padding: '8px 0', borderBottom: '1px solid var(--gray-100)' }}><span>ဒေသတွင်း စျေး (ရှမ်း)</span><span style={{ fontWeight: 700, color: 'var(--danger)' }}>45,000 Ks</span></div>
-            <div className="flex justify-between mb-md" style={{ padding: '8px 0', borderBottom: '1px solid var(--gray-100)' }}><span>မထိခိုက်သောဒေသ ပျမ်းမျှ</span><span style={{ fontWeight: 700, color: 'var(--success)' }}>52,000 Ks</span></div>
-            <div className="flex justify-between" style={{ padding: '8px 0' }}><span>တရားမျှတ ကိုးကားစျေး</span><span style={{ fontWeight: 700, color: 'var(--info)' }}>51,000 Ks</span></div>
+            <div className="flex justify-between mb-md" style={{ padding: '8px 0', borderBottom: '1px solid var(--gray-100)' }}><span>ဒေသတွင်း စျေး (ရှမ်း)</span><span style={{ fontWeight: 700, color: 'var(--danger)' }}>၄၅,၀၀၀ Ks</span></div>
+            <div className="flex justify-between mb-md" style={{ padding: '8px 0', borderBottom: '1px solid var(--gray-100)' }}><span>မထိခိုက်သောဒေသ ပျမ်းမျှ</span><span style={{ fontWeight: 700, color: 'var(--success)' }}>၅၂,၀၀၀ Ks</span></div>
+            <div className="flex justify-between" style={{ padding: '8px 0' }}><span>တရားမျှတ ကိုးကားစျေး</span><span style={{ fontWeight: 700, color: 'var(--info)' }}>၅၁,၀၀၀ Ks</span></div>
           </div>
           <div className="insight-card"><div className="insight-text">ဒေသတွင်းစျေး ကျဆင်းခြင်းသည် ယာယီဖြစ်ပြီး မိုးရွာချိန်ကုန်ဆုံးပါက ပြန်တက်နိုင်ပါသည်။</div></div>
         </div>
@@ -46,8 +46,8 @@ export default function EmergencyPage() {
       <div className="card mb-lg">
         <div className="card-title mb-md">အရေးပေါ်ဝယ်ယူသူများ</div>
         <p style={{ fontSize: 'var(--font-sm)', color: 'var(--gray-500)', marginBottom: 'var(--space-md)' }}>သင့်သီးနှံ အမြန်ရောင်းချလိုပါက ဆက်သွယ်နိုင်ပါသည်</p>
-        <div className="buyer-card"><div className="buyer-avatar" style={{ background: 'var(--primary-600)' }}>မ</div><div className="buyer-info"><div className="buyer-name">မြန်မာ အဂရီဘစ်</div><div className="buyer-detail">မန္တလေး • နှမ်း/ပဲ ဝယ်ယူသည် • 4.8</div></div><button className="btn btn-primary btn-sm">ဆက်သွယ်ရန်</button></div>
-        <div className="buyer-card"><div className="buyer-avatar" style={{ background: 'var(--earth-600)' }}>ရ</div><div className="buyer-info"><div className="buyer-name">ရွှေဥဒေါင်း ကုမ္ပဏီ</div><div className="buyer-detail">မိတ္ထီလာ • ဆီထွက်သီးနှံ • 4.5</div></div><button className="btn btn-primary btn-sm">ဆက်သွယ်ရန်</button></div>
+        <div className="buyer-card"><div className="buyer-avatar" style={{ background: 'var(--primary-600)' }}>မ</div><div className="buyer-info"><div className="buyer-name">မြန်မာ အဂရီဘစ်</div><div className="buyer-detail">မန္တလေး • နှမ်း/ပဲ ဝယ်ယူသည် • ၄.၈</div></div><button className="btn btn-primary btn-sm">ဆက်သွယ်ရန်</button></div>
+        <div className="buyer-card"><div className="buyer-avatar" style={{ background: 'var(--earth-600)' }}>ရ</div><div className="buyer-info"><div className="buyer-name">ရွှေဥဒေါင်း ကုမ္ပဏီ</div><div className="buyer-detail">မိတ္ထီလာ • ဆီထွက်သီးနှံ • ၄.၅</div></div><button className="btn btn-primary btn-sm">ဆက်သွယ်ရန်</button></div>
         <div className="buyer-card"><div className="buyer-avatar" style={{ background: 'var(--info)' }}>N</div><div className="buyer-info"><div className="buyer-name">NGO — စိုက်ပျိုးရေးကူညီမှု</div><div className="buyer-detail">တစ်နိုင်ငံလုံး • ဘေးသင့်တောင်သူများ ဦးစားပေး</div></div><button className="btn btn-outline btn-sm">အသေးစိတ်ကြည့်ရန်</button></div>
       </div>
 

@@ -9,7 +9,7 @@ export default function FarmerHomePage() {
   return (
     <div className="tab-panel">
       <h1 className="page-title">မင်္ဂလာပါ၊ ဦးအောင်မြင့်</h1>
-      <p className="page-subtitle">ယနေ့ 2026 မတ်လ 28 ရက် — မန္တလေးတိုင်း</p>
+      <p className="page-subtitle">ယနေ့ ၂၀၂၆ မတ်လ ၂၈ ရက် — မန္တလေးတိုင်း</p>
 
       {/* Weather Forecast */}
       <div className="card mb-lg" style={{ padding: 'var(--space-lg)' }}>
@@ -18,9 +18,9 @@ export default function FarmerHomePage() {
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#facc15" strokeWidth="2"><circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" /></svg>
         </div>
         <div className="flex items-center gap-md" style={{ marginBottom: 'var(--space-md)' }}>
-          <div style={{ fontSize: '3rem', fontWeight: 700, color: 'var(--gray-800)', lineHeight: 1 }}>32°<span style={{ fontSize: 'var(--font-lg)', fontWeight: 400, color: 'var(--gray-500)' }}> C</span></div>
+          <div style={{ fontSize: '3rem', fontWeight: 700, color: 'var(--gray-800)', lineHeight: 1 }}>၃၂°<span style={{ fontSize: 'var(--font-lg)', fontWeight: 400, color: 'var(--gray-500)' }}> C</span></div>
         </div>
-        <div style={{ fontSize: 'var(--font-sm)', color: 'var(--gray-500)', marginBottom: 'var(--space-md)' }}>H: 34° L: 26° • တစ်စိတ်တစ်ပိုင်း တိမ်ထူ</div>
+        <div style={{ fontSize: 'var(--font-sm)', color: 'var(--gray-500)', marginBottom: 'var(--space-md)' }}>H: ၃၄° L: ၂၆° • တစ်စိတ်တစ်ပိုင်း တိမ်ထူ</div>
         <div style={{ background: 'var(--gray-50)', borderLeft: '3px solid var(--primary-500)', borderRadius: '0 var(--radius-sm) var(--radius-sm) 0', padding: 'var(--space-sm) var(--space-md)', fontSize: 'var(--font-sm)', color: 'var(--gray-600)' }}>
           ယနေ့ သင်၏လယ်ကွင်းတွင် ဓာတ်မြေသြဇာ ထည့်ရန် အကောင်းဆုံးအချိန် ဖြစ်ပါသည်။ သောကြာနေ့အထိ မိုးရွာနိုင်ခြေ နည်းပါသည်။
         </div>
@@ -29,15 +29,15 @@ export default function FarmerHomePage() {
       {/* Emergency Alert */}
       <div className="alert-banner warning">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
-        <div><strong>မိုးသတိပေးချက်:</strong> ရှမ်းပြည်နယ်မြောက်ပိုင်းတွင် လာမည့် 5 ရက်အတွင်း မိုးသည်းထန်နိုင်ပါသည်။</div>
+        <div><strong>မိုးသတိပေးချက်:</strong> ရှမ်းပြည်နယ်မြောက်ပိုင်းတွင် လာမည့် ၅ ရက်အတွင်း မိုးသည်းထန်နိုင်ပါသည်။</div>
       </div>
 
       {/* Summary Stats */}
       <div className="grid-3 mb-lg">
         <div className="stat-card">
           <div className="stat-label">နှမ်း (တစ်တင်း)</div>
-          <div className="stat-value">52,500 Ks</div>
-          <div className="stat-change up">↑ 3.2%</div>
+          <div className="stat-value">၅၂,၅၀၀ Ks</div>
+          <div className="stat-change up">↑ ၃.၂%</div>
         </div>
         <div className="stat-card">
           <div className="stat-label">စျေးကွက်လမ်းကြောင်း</div>
@@ -47,7 +47,7 @@ export default function FarmerHomePage() {
         <div className="stat-card">
           <div className="stat-label">AI အကြံပြုချက်</div>
           <div className="stat-value" style={{ fontSize: 'var(--font-xl)', color: 'var(--primary-700)' }}>စောင့်ပါ</div>
-          <div className="stat-change stable">→ 7 ရက်အတွင်း တက်နိုင်</div>
+          <div className="stat-change stable">→ ၇ ရက်အတွင်း တက်နိုင်</div>
         </div>
       </div>
 

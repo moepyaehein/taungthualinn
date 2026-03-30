@@ -17,9 +17,9 @@ export default function BroadcastPage() {
       <div className="card">
         <div className="card-title mb-md">ပို့ပြီးသား</div>
         <div style={{ fontSize: 'var(--font-sm)' }}>
-          <div style={{ padding: '8px 0', borderBottom: '1px solid var(--gray-100)' }}><strong>အရေးပေါ်:</strong> ရှမ်းမြောက် ရေကြီးမှု သတိပေး — <span style={{ color: 'var(--gray-400)' }}>နာရီ 3 က</span></div>
-          <div style={{ padding: '8px 0', borderBottom: '1px solid var(--gray-100)' }}><strong>ကြေညာ:</strong> ဧပြီလ စနစ်မွမ်းမံမှု — <span style={{ color: 'var(--gray-400)' }}>ရက် 2 က</span></div>
-          <div style={{ padding: '8px 0' }}><strong>အကြံပြု:</strong> ကုန်သည်များ အပတ်စဉ်စျေး တင်ရန် — <span style={{ color: 'var(--gray-400)' }}>ရက် 5 က</span></div>
+          <div style={{ padding: '8px 0', borderBottom: '1px solid var(--gray-100)' }}><strong>အရေးပေါ်:</strong> ရှမ်းမြောက် ရေကြီးမှု သတိပေး — <span style={{ color: 'var(--gray-400)' }}>နာရီ ၃ က</span></div>
+          <div style={{ padding: '8px 0', borderBottom: '1px solid var(--gray-100)' }}><strong>ကြေညာ:</strong> ဧပြီလ စနစ်မွမ်းမံမှု — <span style={{ color: 'var(--gray-400)' }}>ရက် ၂ က</span></div>
+          <div style={{ padding: '8px 0' }}><strong>အကြံပြု:</strong> ကုန်သည်များ အပတ်စဉ်စျေး တင်ရန် — <span style={{ color: 'var(--gray-400)' }}>ရက် ၅ က</span></div>
         </div>
       </div>
     </div>

@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 
+const toBurmese = (str: string) => str.replace(/[0-9]/g, d => '၀၁၂၃၄၅၆၇၈၉'[parseInt(d)]);
+
 function PriceChart() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -18,7 +20,7 @@ function PriceChart() {
     ctx.scale(dpr, dpr);
 
     const data = [48000, 49200, 50100, 51000, 50500, 51500, 52500];
-    const labels = ['မတ် 22', '23', '24', '25', '26', '27', '28'];
+    const labels = ['မတ် ၂၂', '၂၃', '၂၄', '၂၅', '၂၆', '၂၇', '၂၈'];
     const pad = { t: 20, r: 20, b: 40, l: 70 };
     const cW = W - pad.l - pad.r;
     const cH = H - pad.t - pad.b;
@@ -31,7 +33,7 @@ function PriceChart() {
       const y = pad.t + (cH / 5) * i;
       ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(W - pad.r, y); ctx.stroke();
       ctx.fillStyle = '#9ca3af'; ctx.font = '11px sans-serif'; ctx.textAlign = 'right';
-      ctx.fillText(Math.round(max - ((max - min) / 5) * i).toLocaleString(), pad.l - 8, y + 4);
+      ctx.fillText(toBurmese(Math.round(max - ((max - min) / 5) * i).toLocaleString()), pad.l - 8, y + 4);
     }
 
     const pts = data.map((v, i) => ({
@@ -74,7 +76,7 @@ export default function MarketPage() {
     <div className="tab-panel">
       <h1 className="page-title">စျေးကွက်စျေးနှုန်းများ</h1>
       <p className="page-subtitle">နောက်ဆုံးရ စျေးနှုန်းအချက်အလက်များ</p>
-      <div className="last-updated mb-md">နောက်ဆုံးမွမ်းမံချိန်: 2026 မတ်လ 28 ရက်, နံနက် 9:30</div>
+      <div className="last-updated mb-md">နောက်ဆုံးမွမ်းမံချိန်: ၂၀၂၆ မတ်လ ၂၈ ရက်, နံနက် ၉:၃၀</div>
 
       {/* Filters */}
       <div className="card mb-lg">
@@ -101,18 +103,18 @@ export default function MarketPage() {
       <div className="grid-3 mb-lg">
         <div className="stat-card">
           <div className="stat-label">ယနေ့စျေး (နှမ်း / တစ်တင်း)</div>
-          <div className="stat-value">52,500 Ks</div>
-          <div className="stat-change up">↑ 1,500 Ks (3.2%)</div>
+          <div className="stat-value">၅၂,၅၀၀ Ks</div>
+          <div className="stat-change up">↑ ၁,၅၀၀ Ks (၃.၂%)</div>
         </div>
         <div className="stat-card">
           <div className="stat-label">အမြင့်ဆုံးစျေး (ယခုလ)</div>
-          <div className="stat-value" style={{ color: 'var(--trend-up)' }}>53,000 Ks</div>
-          <div className="stat-change up">မတ်လ 25 ရက်</div>
+          <div className="stat-value" style={{ color: 'var(--trend-up)' }}>၅၃,၀၀၀ Ks</div>
+          <div className="stat-change up">မတ်လ ၂၅ ရက်</div>
         </div>
         <div className="stat-card">
           <div className="stat-label">အနိမ့်ဆုံးစျေး (ယခုလ)</div>
-          <div className="stat-value" style={{ color: 'var(--trend-down)' }}>48,000 Ks</div>
-          <div className="stat-change down">မတ်လ 5 ရက်</div>
+          <div className="stat-value" style={{ color: 'var(--trend-down)' }}>၄၈,၀၀၀ Ks</div>
+          <div className="stat-change down">မတ်လ ၅ ရက်</div>
         </div>
       </div>
 
@@ -121,7 +123,7 @@ export default function MarketPage() {
         <div className="card-header">
           <div className="card-title">စျေးနှုန်းပြောင်းလဲမှု ဇယား</div>
           <div className="filter-bar" style={{ margin: 0 }}>
-            {[{ d: 7, l: '7 ရက်' }, { d: 30, l: '30 ရက်' }, { d: 90, l: '3 လ' }].map(r => (
+            {[{ d: 7, l: '၇ ရက်' }, { d: 30, l: '၃၀ ရက်' }, { d: 90, l: '၃ လ' }].map(r => (
               <button key={r.d} className={`filter-chip${activeRange === r.d ? ' active' : ''}`} onClick={() => setActiveRange(r.d)}>{r.l}</button>
             ))}
           </div>
@@ -136,11 +138,11 @@ export default function MarketPage() {
           <table className="data-table">
             <thead><tr><th>စျေးကွက်</th><th>စျေးနှုန်း (Ks)</th><th>ပြောင်းလဲမှု</th><th>အခြေအနေ</th></tr></thead>
             <tbody>
-              <tr><td>မန္တလေး</td><td>52,500</td><td className="price-up">↑ 3.2%</td><td><span className="risk-badge low">ကောင်း</span></td></tr>
-              <tr><td>မိတ္ထီလာ</td><td>51,000</td><td className="price-up">↑ 2.0%</td><td><span className="risk-badge low">ကောင်း</span></td></tr>
-              <tr><td>မကွေး</td><td>53,000</td><td className="price-up">↑ 4.1%</td><td><span className="risk-badge low">အကောင်းဆုံး</span></td></tr>
-              <tr><td>မော်လမြိုင်</td><td>49,500</td><td className="price-down">↓ 1.5%</td><td><span className="risk-badge moderate">သာမန်</span></td></tr>
-              <tr><td>ရန်ကုန်</td><td>51,800</td><td className="price-up">↑ 2.5%</td><td><span className="risk-badge low">ကောင်း</span></td></tr>
+              <tr><td>မန္တလေး</td><td>၅၂,၅၀၀</td><td className="price-up">↑ ၃.၂%</td><td><span className="risk-badge low">ကောင်း</span></td></tr>
+              <tr><td>မိတ္ထီလာ</td><td>၅၁,၀၀၀</td><td className="price-up">↑ ၂.၀%</td><td><span className="risk-badge low">ကောင်း</span></td></tr>
+              <tr><td>မကွေး</td><td>၅၃,၀၀၀</td><td className="price-up">↑ ၄.၁%</td><td><span className="risk-badge low">အကောင်းဆုံး</span></td></tr>
+              <tr><td>မော်လမြိုင်</td><td>၄၉,၅၀၀</td><td className="price-down">↓ ၁.၅%</td><td><span className="risk-badge moderate">သာမန်</span></td></tr>
+              <tr><td>ရန်ကုန်</td><td>၅၁,၈၀၀</td><td className="price-up">↑ ၂.၅%</td><td><span className="risk-badge low">ကောင်း</span></td></tr>
             </tbody>
           </table>
         </div>
@@ -148,7 +150,7 @@ export default function MarketPage() {
 
       {/* Insight */}
       <div className="insight-card">
-        <div className="insight-text"><strong>အကြံပြုချက်:</strong> မကွေးစျေးကွက်တွင် နှမ်းစျေးအမြင့်ဆုံးဖြစ်ပြီး သင့်ဒေသထက် 500 ကျပ် ပိုမြင့်ပါသည်။ သယ်ယူစရိတ်နှင့် တွက်ချက်ပြီး ဆုံးဖြတ်ပါ။</div>
+        <div className="insight-text"><strong>အကြံပြုချက်:</strong> မကွေးစျေးကွက်တွင် နှမ်းစျေးအမြင့်ဆုံးဖြစ်ပြီး သင့်ဒေသထက် ၅၀၀ ကျပ် ပိုမြင့်ပါသည်။ သယ်ယူစရိတ်နှင့် တွက်ချက်ပြီး ဆုံးဖြတ်ပါ။</div>
       </div>
     </div>
   );

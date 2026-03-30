@@ -57,7 +57,7 @@ export default function PricePage() {
                 width: 28, height: 28, borderRadius: '50%', display: 'inline-flex',
                 alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-xs)',
                 fontWeight: 700, color: '#fff', background: 'var(--primary-600)',
-              }}>1</span>
+              }}>၁</span>
               ထုတ်ကုန်နှင့် စျေးကွက် ရွေးချယ်ပါ
             </div>
             <div className="grid-3" style={{ gap: 'var(--space-sm)' }}>
@@ -78,12 +78,12 @@ export default function PricePage() {
                   width: 28, height: 28, borderRadius: '50%', display: 'inline-flex',
                   alignItems: 'center', justifyContent: 'center', fontSize: 'var(--font-xs)',
                   fontWeight: 700, color: '#fff', background: 'var(--primary-600)',
-                }}>2</span>
+                }}>၂</span>
                 စျေးနှုန်း ထည့်သွင်းပါ
               </div>
               <div className="grid-3" style={{ gap: 'var(--space-sm)' }}>
-                <div className="form-group"><label className="form-label">ဝယ်စျေး (Ks)</label><input type="number" className="form-input" placeholder="ဥပမာ - 50,000" /></div>
-                <div className="form-group"><label className="form-label">ရောင်းစျေး (Ks)</label><input type="number" className="form-input" placeholder="ဥပမာ - 52,500" /></div>
+                <div className="form-group"><label className="form-label">ဝယ်စျေး (Ks)</label><input type="number" className="form-input" placeholder="ဥပမာ - ၅၀,၀၀၀" /></div>
+                <div className="form-group"><label className="form-label">ရောင်းစျေး (Ks)</label><input type="number" className="form-input" placeholder="ဥပမာ - ၅၂,၅၀၀" /></div>
                 <div className="form-group"><label className="form-label">အရည်အသွေး</label><select className="form-select"><option>ပုံမှန်</option><option>အရည်အသွေးမြင့်</option><option>အရည်အသွေးနိမ့်</option></select></div>
               </div>
               <div className="form-group"><label className="form-label">မှတ်ချက်</label><textarea className="form-input" rows={2} placeholder="ဥပမာ — ဝယ်လိုအားကောင်း၊ ပမာဏများ"></textarea></div>
@@ -143,8 +143,8 @@ export default function PricePage() {
                 <tr><td style={{ fontWeight: 600 }}>အမျိုးအစား</td><td>ထုတ်ကုန်အမျိုးအစား</td><td>ဆီထွက်သီးနှံ</td><td><span className="verify-badge verified">လိုအပ်</span></td></tr>
                 <tr><td style={{ fontWeight: 600 }}>ထုတ်ကုန်</td><td>ထုတ်ကုန်အမည်</td><td>နှမ်း</td><td><span className="verify-badge verified">လိုအပ်</span></td></tr>
                 <tr><td style={{ fontWeight: 600 }}>စျေးကွက်</td><td>စျေးကွက်အမည်</td><td>မန္တလေး</td><td><span className="verify-badge verified">လိုအပ်</span></td></tr>
-                <tr><td style={{ fontWeight: 600 }}>ဝယ်စျေး</td><td>ဝယ်ယူစျေးနှုန်း (ကျပ်)</td><td>51000</td><td><span className="verify-badge verified">လိုအပ်</span></td></tr>
-                <tr><td style={{ fontWeight: 600 }}>ရောင်းစျေး</td><td>ရောင်းချစျေးနှုန်း (ကျပ်)</td><td>52500</td><td><span className="verify-badge verified">လိုအပ်</span></td></tr>
+                <tr><td style={{ fontWeight: 600 }}>ဝယ်စျေး</td><td>ဝယ်ယူစျေးနှုန်း (ကျပ်)</td><td>၅၁၀၀၀</td><td><span className="verify-badge verified">လိုအပ်</span></td></tr>
+                <tr><td style={{ fontWeight: 600 }}>ရောင်းစျေး</td><td>ရောင်းချစျေးနှုန်း (ကျပ်)</td><td>၅၂၅၀၀</td><td><span className="verify-badge verified">လိုအပ်</span></td></tr>
                 <tr><td style={{ fontWeight: 600 }}>အရည်အသွေး</td><td>ပုံမှန် / မြင့် / နိမ့်</td><td>ပုံမှန်</td><td><span className="verify-badge pending">ရွေးချယ်</span></td></tr>
                 <tr><td style={{ fontWeight: 600 }}>မှတ်ချက်</td><td>ထပ်ဆောင်းမှတ်ချက်</td><td>ပမာဏများ</td><td><span className="verify-badge pending">ရွေးချယ်</span></td></tr>
               </tbody>
@@ -157,9 +157,9 @@ export default function PricePage() {
             <div className="table-wrapper"><table className="data-table">
               <thead><tr><th>ရက်စွဲ</th><th>ဖိုင်အမည်</th><th>Row</th><th>Error</th><th>အခြေအနေ</th></tr></thead>
               <tbody>
-                <tr><td>မတ် 27</td><td>mandalay_prices_0327.csv</td><td>24</td><td>0</td><td><span className="verify-badge verified">အတည်ပြုပြီး</span></td></tr>
-                <tr><td>မတ் 25</td><td>weekly_oilseeds.xlsx</td><td>18</td><td>2</td><td><span className="verify-badge peer">စစ်ဆေးဆဲ</span></td></tr>
-                <tr><td>မတ် 22</td><td>all_products_0322.csv</td><td>45</td><td>1</td><td><span className="verify-badge verified">အတည်ပြုပြီး</span></td></tr>
+                <tr><td>မတ် ၂၇</td><td>mandalay_prices_၀၃၂၇.csv</td><td>၂၄</td><td>၀</td><td><span className="verify-badge verified">အတည်ပြုပြီး</span></td></tr>
+                <tr><td>မတ် ၂၅</td><td>weekly_oilseeds.xlsx</td><td>၁၈</td><td>၂</td><td><span className="verify-badge peer">စစ်ဆေးဆဲ</span></td></tr>
+                <tr><td>မတ် ၂၂</td><td>all_products_၀၃၂၂.csv</td><td>၄၅</td><td>၁</td><td><span className="verify-badge verified">အတည်ပြုပြီး</span></td></tr>
               </tbody>
             </table></div>
           </div>
@@ -172,11 +172,11 @@ export default function PricePage() {
         <div className="table-wrapper"><table className="data-table">
           <thead><tr><th>ရက်စွဲ</th><th>ထုတ်ကုန်</th><th>စျေးကွက်</th><th>ဝယ်/ရောင်းစျေး</th><th>တင်နည်း</th><th>အခြေအနေ</th></tr></thead>
           <tbody>
-            <tr><td>မတ် 28</td><td>နှမ်း</td><td>မန္တလေး</td><td>51,000 / 52,500</td><td><span style={{ fontSize: 'var(--font-xs)', padding: '2px 8px', borderRadius: 'var(--radius-full)', background: 'var(--primary-50)', color: 'var(--primary-700)', fontWeight: 600 }}>📝 တစ်ခုချင်း</span></td><td><span className="verify-badge verified">အတည်ပြုပြီး</span></td></tr>
-            <tr><td>မတ် 28</td><td>ပဲတီစိမ်း</td><td>မန္တလေး</td><td>38,000 / 39,500</td><td><span style={{ fontSize: 'var(--font-xs)', padding: '2px 8px', borderRadius: 'var(--radius-full)', background: '#eef2ff', color: '#4f46e5', fontWeight: 600 }}>📁 အစုလိုက်</span></td><td><span className="verify-badge pending">စောင့်ဆဲ</span></td></tr>
-            <tr><td>မတ် 27</td><td>မြေပဲ</td><td>မိတ္ထီလာ</td><td>42,000 / 43,000</td><td><span style={{ fontSize: 'var(--font-xs)', padding: '2px 8px', borderRadius: 'var(--radius-full)', background: 'var(--primary-50)', color: 'var(--primary-700)', fontWeight: 600 }}>📝 တစ်ခုချင်း</span></td><td><span className="verify-badge verified">အတည်ပြုပြီး</span></td></tr>
-            <tr><td>မတ် 27</td><td>နှမ်း</td><td>မန္တလေး</td><td>50,500 / 52,000</td><td><span style={{ fontSize: 'var(--font-xs)', padding: '2px 8px', borderRadius: 'var(--radius-full)', background: '#eef2ff', color: '#4f46e5', fontWeight: 600 }}>📁 အစုလိုက်</span></td><td><span className="verify-badge peer">ကုန်သည်စစ်ပြီး</span></td></tr>
-            <tr><td>မတ် 26</td><td>ဆန်</td><td>မန္တလေး</td><td>28,000 / 29,500</td><td><span style={{ fontSize: 'var(--font-xs)', padding: '2px 8px', borderRadius: 'var(--radius-full)', background: 'var(--primary-50)', color: 'var(--primary-700)', fontWeight: 600 }}>📝 တစ်ခုချင်း</span></td><td><span className="verify-badge flagged">သံသယ</span></td></tr>
+            <tr><td>မတ် ၂၈</td><td>နှမ်း</td><td>မန္တလေး</td><td>၅၁,၀၀၀ / ၅၂,၅၀၀</td><td><span style={{ fontSize: 'var(--font-xs)', padding: '2px 8px', borderRadius: 'var(--radius-full)', background: 'var(--primary-50)', color: 'var(--primary-700)', fontWeight: 600 }}>📝 တစ်ခုချင်း</span></td><td><span className="verify-badge verified">အတည်ပြုပြီး</span></td></tr>
+            <tr><td>မတ် ၂၈</td><td>ပဲတီစိမ်း</td><td>မန္တလေး</td><td>၃၈,၀၀၀ / ၃၉,၅၀၀</td><td><span style={{ fontSize: 'var(--font-xs)', padding: '2px 8px', borderRadius: 'var(--radius-full)', background: '#eef2ff', color: '#4f46e5', fontWeight: 600 }}>📁 အစုလိုက်</span></td><td><span className="verify-badge pending">စောင့်ဆဲ</span></td></tr>
+            <tr><td>မတ် ၂၇</td><td>မြေပဲ</td><td>မိတ္ထီလာ</td><td>၄၂,၀၀၀ / ၄၃,၀၀၀</td><td><span style={{ fontSize: 'var(--font-xs)', padding: '2px 8px', borderRadius: 'var(--radius-full)', background: 'var(--primary-50)', color: 'var(--primary-700)', fontWeight: 600 }}>📝 တစ်ခုချင်း</span></td><td><span className="verify-badge verified">အတည်ပြုပြီး</span></td></tr>
+            <tr><td>မတ် ၂၇</td><td>နှမ်း</td><td>မန္တလေး</td><td>၅၀,၅၀၀ / ၅၂,၀၀၀</td><td><span style={{ fontSize: 'var(--font-xs)', padding: '2px 8px', borderRadius: 'var(--radius-full)', background: '#eef2ff', color: '#4f46e5', fontWeight: 600 }}>📁 အစုလိုက်</span></td><td><span className="verify-badge peer">ကုန်သည်စစ်ပြီး</span></td></tr>
+            <tr><td>မတ် ၂၆</td><td>ဆန်</td><td>မန္တလေး</td><td>၂၈,၀၀၀ / ၂၉,၅၀၀</td><td><span style={{ fontSize: 'var(--font-xs)', padding: '2px 8px', borderRadius: 'var(--radius-full)', background: 'var(--primary-50)', color: 'var(--primary-700)', fontWeight: 600 }}>📝 တစ်ခုချင်း</span></td><td><span className="verify-badge flagged">သံသယ</span></td></tr>
           </tbody>
         </table></div>
       </div>

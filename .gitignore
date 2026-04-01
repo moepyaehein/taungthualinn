@@ -32,6 +32,13 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+.venv/
+ml/artifacts/
+ml/reports/
+ml/__pycache__/
+*.pyc
+devserver*.log
+fastapi*.log
 
 # vercel
 .vercel

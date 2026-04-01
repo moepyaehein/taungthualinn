@@ -6,14 +6,19 @@
     "dev": "next dev --webpack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "ml:train": ".\\\\.venv\\\\Scripts\\\\python.exe .\\\\ml\\\\train_recommendation_model.py",
+    "ml:predict:farmer": ".\\\\.venv\\\\Scripts\\\\python.exe .\\\\ml\\\\predict_recommendation.py --role farmer",
+    "ml:predict:merchant": ".\\\\.venv\\\\Scripts\\\\python.exe .\\\\ml\\\\predict_recommendation.py --role merchant",
+    "ml:api": ".\\\\.venv\\\\Scripts\\\\python.exe -m uvicorn ml.api:app --host 127.0.0.1 --port 8000"
   },
   "dependencies": {
     "@supabase/ssr": "^0.9.0",
     "@supabase/supabase-js": "^2.100.1",
     "next": "16.2.1",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { runRecommendationPrediction } from '@/lib/recommendation/server';
 
 /**
  * GET /api/market — Aggregated market prices with filters
@@ -7,8 +8,42 @@ import { createClient } from '@/lib/supabase/server';
  * Returns latest verified prices grouped by market
  */
 export async function GET(request: NextRequest) {
-  const supabase = await createClient();
   const { searchParams } = request.nextUrl;
+  const mode = searchParams.get('mode');
+
+  if (mode === 'recommendation') {
+    const role = searchParams.get('role');
+    const crop = searchParams.get('crop');
+    const region = searchParams.get('region');
+    const market = searchParams.get('market') || undefined;
+    const quality = searchParams.get('quality') || undefined;
+    const unit = searchParams.get('unit') || undefined;
+
+    if ((role !== 'farmer' && role !== 'merchant') || !crop || !region) {
+      return NextResponse.json(
+        { error: 'Missing or invalid recommendation params: role, crop, region' },
+        { status: 400 },
+      );
+    }
+
+    try {
+      const data = await runRecommendationPrediction({
+        role,
+        crop,
+        region,
+        market,
+        quality,
+        unit,
+      });
+
+      return NextResponse.json({ data });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Prediction failed';
+      return NextResponse.json({ error: message }, { status: 500 });
+    }
+  }
+
+  const supabase = await createClient();
 
   const productId = searchParams.get('product_id');
   const regionId = searchParams.get('region_id');

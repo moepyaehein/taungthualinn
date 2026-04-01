@@ -1,57 +1,62 @@
-import Link from 'next/link';
+'use client';
 
-export const metadata = {
-  title: 'တောင်သူအလင်း — တောင်သူပင်မ',
-  description: 'တောင်သူအလင်း — မြန်မာတောင်သူများအတွက် AI စျေးကွက်ဆုံးဖြတ်ချက် ဒက်ရှ်ဘုတ်',
-};
+import Link from 'next/link';
+import { useApi } from '@/lib/useApi';
+
+interface DashboardData {
+  profile: { full_name: string; region?: { name_mm: string } };
+  latest_prices: { sell_price: number; product?: { name_mm: string }; market?: { name_mm: string } }[];
+  emergencies: { title: string; risk_level: string; region?: { name_mm: string } }[];
+  unread_notifications: { title: string; created_at: string }[];
+}
 
 export default function FarmerHomePage() {
+  const { data, loading } = useApi<DashboardData>('/api/dashboard/farmer');
+
+  const userName = data?.profile?.full_name || 'တောင်သူ';
+  const regionName = data?.profile?.region?.name_mm || '';
+  const topPrice = data?.latest_prices?.[0];
+  const emergency = data?.emergencies?.[0];
+
+  const today = new Date();
+  const dateStr = `${today.getFullYear()} ${['ဇန်နဝါရီ','ဖေဖော်ဝါရီ','မတ်','ဧပြီ','မေ','ဇွန်','ဇူလိုင်','ဩဂုတ်','စက်တင်ဘာ','အောက်တိုဘာ','နိုဝင်ဘာ','ဒီဇင်ဘာ'][today.getMonth()]}လ ${today.getDate()} ရက်`;
+
   return (
     <div className="tab-panel">
-      <h1 className="page-title">မင်္ဂလာပါ၊ ဦးအောင်မြင့်</h1>
-      <p className="page-subtitle">ယနေ့ ၂၀၂၆ မတ်လ ၂၈ ရက် — မန္တလေးတိုင်း</p>
+      <h1 className="page-title">မင်္ဂလာပါ၊ {userName}</h1>
+      <p className="page-subtitle">ယနေ့ {dateStr} — {regionName}</p>
 
-      {/* Weather Forecast */}
-      <div className="card mb-lg" style={{ padding: 'var(--space-lg)' }}>
-        <div className="flex justify-between items-center mb-md">
-          <div style={{ fontSize: 'var(--font-xs)', fontWeight: 600, color: 'var(--gray-500)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>ယနေ့ ရာသီဥတု</div>
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#facc15" strokeWidth="2"><circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" /></svg>
+      {emergency && (
+        <div className="alert-banner warning">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+          <div><strong>သတိပေးချက်:</strong> {emergency.title} — {emergency.region?.name_mm}</div>
         </div>
-        <div className="flex items-center gap-md" style={{ marginBottom: 'var(--space-md)' }}>
-          <div style={{ fontSize: '3rem', fontWeight: 700, color: 'var(--gray-800)', lineHeight: 1 }}>၃၂°<span style={{ fontSize: 'var(--font-lg)', fontWeight: 400, color: 'var(--gray-500)' }}> C</span></div>
-        </div>
-        <div style={{ fontSize: 'var(--font-sm)', color: 'var(--gray-500)', marginBottom: 'var(--space-md)' }}>H: ၃၄° L: ၂၆° • တစ်စိတ်တစ်ပိုင်း တိမ်ထူ</div>
-        <div style={{ background: 'var(--gray-50)', borderLeft: '3px solid var(--primary-500)', borderRadius: '0 var(--radius-sm) var(--radius-sm) 0', padding: 'var(--space-sm) var(--space-md)', fontSize: 'var(--font-sm)', color: 'var(--gray-600)' }}>
-          ယနေ့ သင်၏လယ်ကွင်းတွင် ဓာတ်မြေသြဇာ ထည့်ရန် အကောင်းဆုံးအချိန် ဖြစ်ပါသည်။ သောကြာနေ့အထိ မိုးရွာနိုင်ခြေ နည်းပါသည်။
-        </div>
-      </div>
+      )}
 
-      {/* Emergency Alert */}
-      <div className="alert-banner warning">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
-        <div><strong>မိုးသတိပေးချက်:</strong> ရှမ်းပြည်နယ်မြောက်ပိုင်းတွင် လာမည့် ၅ ရက်အတွင်း မိုးသည်းထန်နိုင်ပါသည်။</div>
-      </div>
+      {loading ? (
+        <div className="grid-3 mb-lg">
+          {[1,2,3].map(i => <div key={i} className="stat-card"><div className="stat-label">ခဏစောင့်ပါ...</div><div className="stat-value" style={{ opacity: 0.3 }}>—</div></div>)}
+        </div>
+      ) : (
+        <div className="grid-3 mb-lg">
+          <div className="stat-card">
+            <div className="stat-label">{topPrice?.product?.name_mm || 'စျေးနှုန်း'} (တစ်တင်း)</div>
+            <div className="stat-value">{topPrice ? `${topPrice.sell_price.toLocaleString()} Ks` : '—'}</div>
+            <div className="stat-change up">{topPrice?.market?.name_mm || ''}</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-label">မဖတ်ရသေးသော အသိပေးချက်</div>
+            <div className="stat-value">{data?.unread_notifications?.length || 0}</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-label">အရေးပေါ် သတိပေးချက်</div>
+            <div className="stat-value" style={{ color: (data?.emergencies?.length || 0) > 0 ? 'var(--danger)' : 'var(--success)' }}>
+              {data?.emergencies?.length || 0}
+            </div>
+          </div>
+        </div>
+      )}
 
-      {/* Summary Stats */}
-      <div className="grid-3 mb-lg">
-        <div className="stat-card">
-          <div className="stat-label">နှမ်း (တစ်တင်း)</div>
-          <div className="stat-value">၅၂,၅၀၀ Ks</div>
-          <div className="stat-change up">↑ ၃.၂%</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">စျေးကွက်လမ်းကြောင်း</div>
-          <div className="stat-value" style={{ color: 'var(--trend-up)' }}>↑ တက်နေ</div>
-          <div className="stat-change up">ယခင်အပတ်ထက် ↑</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">AI အကြံပြုချက်</div>
-          <div className="stat-value" style={{ fontSize: 'var(--font-xl)', color: 'var(--primary-700)' }}>စောင့်ပါ</div>
-          <div className="stat-change stable">→ ၇ ရက်အတွင်း တက်နိုင်</div>
-        </div>
-      </div>
-
-      {/* Quick Navigation */}
       <h2 className="section-title mb-md">မြန်ဆန်သောလမ်းညွှန်</h2>
       <div className="grid-4">
         <Link href="/farmer/market" className="quick-link">

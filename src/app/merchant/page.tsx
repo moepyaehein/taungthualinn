@@ -1,20 +1,35 @@
-import Link from 'next/link';
+'use client';
 
-export const metadata = { title: 'တောင်သူအလင်း — ကုန်သည်ပင်မ' };
+import Link from 'next/link';
+import { useApi } from '@/lib/useApi';
+
+interface MerchantDash {
+  stats: { today_submissions: number; pending_peer_review: number; verified_this_week: number; emergency_requests: number };
+  my_listings: { id: number; product?: { name_mm: string }; region?: { name_mm: string }; target_price: number; quantity: number; status: string }[];
+  unread_notifications: { id: number; title: string; body: string; created_at: string }[];
+}
 
 export default function MerchantHomePage() {
+  const { data, loading } = useApi<MerchantDash>('/api/dashboard/merchant');
+
+  const s = data?.stats;
+
   return (
     <div className="tab-panel">
-      <h1 className="page-title">မင်္ဂလာပါ၊ ဦးကျော်မင်း</h1>
-      <p className="page-subtitle">ကုန်သည် ဒက်ရှ်ဘုတ် — ၂၀၂၆ မတ်လ ၂၈ ရက်</p>
+      <h1 className="page-title">ကုန်သည် ဒက်ရှ်ဘုတ်</h1>
+      <p className="page-subtitle">ယနေ့ အခြေအနေ အကျဉ်းချုပ်</p>
 
-      <div className="alert-banner danger mb-lg"><div><strong>အရေးပေါ်:</strong> ရှမ်းမြောက် ရေကြီးမှုကြောင့် အရေးပေါ်ဝယ်ယူသူ လိုအပ်နေပါသည်။</div></div>
+      {(s?.emergency_requests || 0) > 0 && (
+        <div className="alert-banner danger mb-lg"><div><strong>အရေးပေါ်:</strong> အရေးပေါ်ဝယ်ယူသူ {s?.emergency_requests} ဦး လိုအပ်နေပါသည်။</div></div>
+      )}
 
       <div className="grid-4 mb-lg">
-        <div className="stat-card"><div className="stat-label">ယနေ့ စျေးတင်သွင်းမှု</div><div className="stat-value">၈/၁၂</div><div className="stat-change up">၆၇% ပြီးစီး</div></div>
-        <div className="stat-card"><div className="stat-label">အတည်ပြု စောင့်မှု</div><div className="stat-value">၅</div><div className="stat-change stable">စစ်ဆေးဆဲ</div></div>
-        <div className="stat-card"><div className="stat-label">အတည်ပြုပြီး</div><div className="stat-value">၂၃</div><div className="stat-change up">ယခုအပတ်</div></div>
-        <div className="stat-card"><div className="stat-label">အရေးပေါ် တောင်းဆိုမှု</div><div className="stat-value">၃</div><div className="stat-change down">အမြန်တုံ့ပြန်ရန်</div></div>
+        {loading ? [1,2,3,4].map(i => <div key={i} className="stat-card"><div className="stat-label">—</div><div className="stat-value" style={{ opacity: 0.3 }}>...</div></div>) : (<>
+          <div className="stat-card"><div className="stat-label">ယနေ့ စျေးတင်သွင်းမှု</div><div className="stat-value">{s?.today_submissions || 0}</div></div>
+          <div className="stat-card"><div className="stat-label">စစ်ဆေးရန် စောင့်မှု</div><div className="stat-value">{s?.pending_peer_review || 0}</div></div>
+          <div className="stat-card"><div className="stat-label">ယခုအပတ် အတည်ပြုပြီး</div><div className="stat-value">{s?.verified_this_week || 0}</div></div>
+          <div className="stat-card"><div className="stat-label">အရေးပေါ် တောင်းဆိုမှု</div><div className="stat-value">{s?.emergency_requests || 0}</div></div>
+        </>)}
       </div>
 
       <h2 className="section-title mb-md">မြန်ဆန်လုပ်ဆောင်ချက်</h2>
@@ -28,21 +43,24 @@ export default function MerchantHomePage() {
 
       <div className="grid-2">
         <div className="card">
-          <div className="card-title mb-md">လုပ်ဆောင်မှုအကျဉ်း</div>
-          <div style={{ fontSize: 'var(--font-sm)', lineHeight: 2.2 }}>
-            <div className="flex justify-between" style={{ borderBottom: '1px solid var(--gray-100)', padding: '4px 0' }}><span>စုစုပေါင်း ထုတ်ကုန်</span><span style={{ fontWeight: 700 }}>၁၂ မျိုး</span></div>
-            <div className="flex justify-between" style={{ borderBottom: '1px solid var(--gray-100)', padding: '4px 0' }}><span>တက်ကြွ ကမ်းလှမ်းချက်</span><span style={{ fontWeight: 700 }}>၆ ခု</span></div>
-            <div className="flex justify-between" style={{ borderBottom: '1px solid var(--gray-100)', padding: '4px 0' }}><span>ယခုလ စစ်ဆေးပြီး</span><span style={{ fontWeight: 700 }}>၄၅ ခု</span></div>
-            <div className="flex justify-between" style={{ padding: '4px 0' }}><span>ကုန်သည်အဆင့်</span><span style={{ fontWeight: 700, color: '#4f46e5' }}>ယုံကြည်ရ</span></div>
-          </div>
+          <div className="card-title mb-md">တက်ကြွ ကမ်းလှမ်းချက်များ</div>
+          {data?.my_listings?.length ? data.my_listings.map((l) => (
+            <div key={l.id} className="buyer-card">
+              <div className="buyer-info">
+                <div className="buyer-name">{l.product?.name_mm} — {l.quantity} တင်း</div>
+                <div className="buyer-detail">{l.region?.name_mm} • {l.target_price.toLocaleString()} Ks/တင်း</div>
+              </div>
+              <span className="verify-badge verified">{l.status === 'active' ? 'တက်ကြွ' : l.status}</span>
+            </div>
+          )) : <p style={{ fontSize: 'var(--font-sm)', color: 'var(--gray-400)' }}>ကမ်းလှမ်းချက် မရှိသေးပါ</p>}
         </div>
         <div className="card">
           <div className="card-title mb-md">မကြာသေးမီ အသိပေးချက်</div>
-          <div style={{ fontSize: 'var(--font-sm)' }}>
-            <div style={{ padding: '8px 0', borderBottom: '1px solid var(--gray-100)' }}>နှမ်း (မန္တလေး) စျေးအတည်ပြုရန် လိုပါသည်<br /><span style={{ color: 'var(--gray-400)', fontSize: 'var(--font-xs)' }}>မိနစ် ၃၀ ခန့်က</span></div>
-            <div style={{ padding: '8px 0', borderBottom: '1px solid var(--gray-100)' }}>ပဲတီစိမ်း စျေး Admin အတည်ပြုပြီး<br /><span style={{ color: 'var(--gray-400)', fontSize: 'var(--font-xs)' }}>နာရီ ၂ ခန့်က</span></div>
-            <div style={{ padding: '8px 0' }}>အရေးပေါ် — ရှမ်းမြောက် သီးနှံဝယ်ယူသူ လိုအပ်<br /><span style={{ color: 'var(--gray-400)', fontSize: 'var(--font-xs)' }}>နာရီ ၁ ခန့်က</span></div>
-          </div>
+          {data?.unread_notifications?.length ? data.unread_notifications.map((n) => (
+            <div key={n.id} style={{ padding: '8px 0', borderBottom: '1px solid var(--gray-100)', fontSize: 'var(--font-sm)' }}>
+              {n.title}<br /><span style={{ color: 'var(--gray-400)', fontSize: 'var(--font-xs)' }}>{new Date(n.created_at).toLocaleDateString('my-MM')}</span>
+            </div>
+          )) : <p style={{ fontSize: 'var(--font-sm)', color: 'var(--gray-400)' }}>အသိပေးချက် မရှိသေးပါ</p>}
         </div>
       </div>
     </div>

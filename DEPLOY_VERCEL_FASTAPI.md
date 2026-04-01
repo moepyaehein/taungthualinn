@@ -104,8 +104,9 @@ Local fallback:
 1. Deploy Python service
 2. Install dependencies from:
    - [requirements.txt](/d:/climateAi/taung-thu-app/ml/requirements.txt)
-3. Make sure the model artifact is available to the service
-4. Confirm:
+3. Confirm the datasets are present in the deployed service
+4. On first boot, FastAPI can now train and save the artifact automatically if it is missing
+5. Confirm:
    - `/health` returns `200`
    - `/predict` returns valid JSON
 
@@ -118,17 +119,17 @@ Current `.gitignore` excludes:
 
 That means the trained model artifact is not committed.
 
-So for FastAPI production you need one of these:
+The FastAPI service now has bootstrap logic:
 
-1. Train during deployment
-2. Upload the artifact separately
-3. Store the artifact in persistent storage and load it at runtime
+1. if artifact exists, load it
+2. if artifact is missing, train from the committed datasets
+3. save a fresh artifact under `ml/artifacts/`
+
+Because of that, first startup on a new Python host may take longer while the model is trained.
 
 ## Suggested next improvement
 
 To make deployment easier, the next step should be:
 
-1. add artifact bootstrap logic for FastAPI production
-2. or add a build/download step for `recommendation_forecast.joblib`
-
-Without that, the FastAPI code is deployed but may still fail if the artifact is missing.
+1. move the artifact to persistent storage for faster restarts
+2. or prebuild the artifact during CI/CD and upload it before boot

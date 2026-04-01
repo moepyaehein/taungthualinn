@@ -385,6 +385,23 @@ def load_artifact(artifact_path: Path | None = None) -> dict[str, Any]:
     return joblib.load(resolved_path)
 
 
+def ensure_runtime_artifacts(
+    artifact_path: Path | None = None,
+    market_path: Path = DEFAULT_MARKET_DATASET,
+    weather_path: Path = DEFAULT_WEATHER_DATASET,
+) -> tuple[dict[str, Any], TrainingArtifacts, bool]:
+    resolved_path = artifact_path or (ARTIFACT_DIR / "recommendation_forecast.joblib")
+
+    if resolved_path.exists():
+        training_artifacts = prepare_training_artifacts(market_path=market_path, weather_path=weather_path)
+        return load_artifact(resolved_path), training_artifacts, False
+
+    training_artifacts = prepare_training_artifacts(market_path=market_path, weather_path=weather_path)
+    model_7d, model_30d, metrics = train_models(training_artifacts)
+    save_artifacts(model_7d, model_30d, training_artifacts, metrics)
+    return load_artifact(resolved_path), training_artifacts, True
+
+
 def build_latest_feature_row(
     artifacts: TrainingArtifacts,
     crop_name: str,

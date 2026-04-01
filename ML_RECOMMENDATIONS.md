@@ -46,6 +46,13 @@ Health check:
 curl http://127.0.0.1:8000/health
 ```
 
+If the model artifact is missing, FastAPI now bootstraps it automatically from:
+
+- `mock_market_prices_1y_myanmar.xlsx`
+- `myanmar_weather_combined.csv`
+
+That means first startup can take longer on a fresh deployment.
+
 The Next.js app calls the FastAPI server through:
 
 - `FASTAPI_BASE_URL`

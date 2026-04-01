@@ -6,15 +6,13 @@ from pydantic import BaseModel
 from ml.recommendation_pipeline import (
     build_latest_feature_row,
     derive_recommendation,
-    load_artifact,
-    prepare_training_artifacts,
+    ensure_runtime_artifacts,
 )
 
 
 app = FastAPI(title="Taung Thu Recommendation API", version="0.1.0")
 
-ARTIFACT = load_artifact()
-TRAINING_ARTIFACTS = prepare_training_artifacts()
+ARTIFACT, TRAINING_ARTIFACTS, BOOTSTRAPPED_ARTIFACT = ensure_runtime_artifacts()
 
 
 class PredictionRequest(BaseModel):
@@ -27,8 +25,12 @@ class PredictionRequest(BaseModel):
 
 
 @app.get("/health")
-def health() -> dict[str, str]:
-    return {"status": "ok"}
+def health() -> dict[str, str | bool]:
+    return {
+        "status": "ok",
+        "artifact_ready": True,
+        "bootstrapped_artifact": BOOTSTRAPPED_ARTIFACT,
+    }
 
 
 @app.post("/predict")

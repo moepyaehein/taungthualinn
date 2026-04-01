@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useApi, apiPost } from '@/lib/useApi';
 
 interface Product { id: number; name_mm: string; }
@@ -22,17 +22,14 @@ export default function RecordsPage() {
   const records = Array.isArray(raw) ? raw : (raw as RecordsResponse)?.data || [];
   const summary = (raw as RecordsResponse)?.summary;
 
-  // Set default product
-  useEffect(() => {
-    if (products?.length && !productId) setProductId(String(products[0].id));
-  }, [products, productId]);
+  const effectiveProductId = productId || (products?.[0] ? String(products[0].id) : '');
 
   const handleSubmit = async () => {
-    if (!productId || !harvestQty) { setMsg('သီးနှံနှင့် ပမာဏ ထည့်ပါ'); return; }
+    if (!effectiveProductId || !harvestQty) { setMsg('သီးနှံနှင့် ပမာဏ ထည့်ပါ'); return; }
     setSubmitting(true);
     setMsg('');
     const { error } = await apiPost('/api/records', {
-      product_id: parseInt(productId),
+      product_id: parseInt(effectiveProductId),
       harvest_qty: parseInt(harvestQty),
       storage_qty: storageQty ? parseInt(storageQty) : 0,
       sale_date: saleDate || null,
@@ -59,7 +56,7 @@ export default function RecordsPage() {
         <div className="record-form">
           <div className="form-group">
             <label className="form-label">သီးနှံအမျိုးအစား</label>
-            <select className="form-select" value={productId} onChange={(e) => setProductId(e.target.value)}>
+            <select className="form-select" value={effectiveProductId} onChange={(e) => setProductId(e.target.value)}>
               {products?.map((p) => <option key={p.id} value={p.id}>{p.name_mm}</option>)}
               {!products?.length && <option>ခဏစောင့်ပါ...</option>}
             </select>

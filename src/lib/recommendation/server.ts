@@ -16,6 +16,16 @@ interface PredictArgs {
   unit?: string;
 }
 
+class RecommendationServiceError extends Error {
+  status: number;
+
+  constructor(message: string, status = 500) {
+    super(message);
+    this.name = "RecommendationServiceError";
+    this.status = status;
+  }
+}
+
 function buildReasonLines(payload: ForecastRecommendation): string[] {
   const direction7d =
     payload.recommendation.delta_7d_pct > 0
@@ -48,26 +58,25 @@ function buildSummary(payload: ForecastRecommendation): string {
   return `${payload.region} ရှိ ${payload.crop} အတွက် ${actionLabels[payload.recommendation.action]}။ လက်ရှိဈေးနှုန်းမှာ ${payload.current_price.toFixed(2)} ဖြစ်ပြီး ၇ ရက်ခန့်မှန်းဈေးနှုန်း ${payload.forecast_7d.toFixed(2)} နှင့် ၃၀ ရက်ခန့်မှန်းဈေးနှုန်း ${payload.forecast_30d.toFixed(2)} ဟု တွက်ချက်ထားပါသည်။`;
 }
 
-export async function runRecommendationPrediction(args: PredictArgs) {
-  const baseUrl = process.env.FASTAPI_BASE_URL || "http://127.0.0.1:8000";
-  const response = await fetch(`${baseUrl}/predict`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(args),
-    cache: "no-store",
-  });
+function getFastApiBaseUrl() {
+  const configured = process.env.FASTAPI_BASE_URL?.trim();
 
-  const payload = (await response.json()) as ForecastRecommendation | { detail?: string };
-
-  if (!response.ok) {
-    const detail = "detail" in payload ? payload.detail : "Prediction failed";
-    throw new Error(detail || "Prediction failed");
+  if (configured) {
+    return configured.replace(/\/$/, "");
   }
 
-  const prediction = payload as ForecastRecommendation;
-  const localizedPrediction: ForecastRecommendation = {
+  if (process.env.NODE_ENV === "production") {
+    throw new RecommendationServiceError(
+      "Recommendation service is not configured. Set FASTAPI_BASE_URL in the deployment environment.",
+      503,
+    );
+  }
+
+  return "http://127.0.0.1:8000";
+}
+
+function localizePrediction(prediction: ForecastRecommendation): ForecastRecommendation {
+  return {
     ...prediction,
     crop: toMyanmarCropName(prediction.crop),
     region: toMyanmarRegionName(prediction.region),
@@ -75,10 +84,45 @@ export async function runRecommendationPrediction(args: PredictArgs) {
     quality: toMyanmarQualityName(prediction.quality),
     unit: toMyanmarUnitName(prediction.unit),
   };
+}
+
+export async function runRecommendationPrediction(args: PredictArgs) {
+  const baseUrl = getFastApiBaseUrl();
+
+  let response: Response;
+  try {
+    response = await fetch(`${baseUrl}/predict`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(args),
+      cache: "no-store",
+      signal: AbortSignal.timeout(15000),
+    });
+  } catch (error) {
+    throw new RecommendationServiceError(
+      error instanceof Error
+        ? `Recommendation service is unavailable: ${error.message}`
+        : "Recommendation service is unavailable.",
+      503,
+    );
+  }
+
+  const payload = (await response.json()) as ForecastRecommendation | { detail?: string };
+
+  if (!response.ok) {
+    const detail = "detail" in payload ? payload.detail : "Prediction failed";
+    throw new RecommendationServiceError(detail || "Prediction failed", response.status);
+  }
+
+  const prediction = localizePrediction(payload as ForecastRecommendation);
 
   return {
-    ...localizedPrediction,
-    summary: buildSummary(localizedPrediction),
-    reasons: buildReasonLines(localizedPrediction),
+    ...prediction,
+    summary: buildSummary(prediction),
+    reasons: buildReasonLines(prediction),
   };
 }
+
+export { RecommendationServiceError };

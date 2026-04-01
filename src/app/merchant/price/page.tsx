@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useApi, apiPost } from '@/lib/useApi';
 
 interface Category { id: number; name_mm: string; }
@@ -28,26 +28,25 @@ export default function PricePage() {
   const [submitting, setSubmitting] = useState(false);
   const [msg, setMsg] = useState('');
 
-  const filteredProducts = allProducts?.filter(p => !categoryId || p.category_id === parseInt(categoryId)) || [];
-
-  useEffect(() => {
-    if (categories?.length && !categoryId) setCategoryId(String(categories[0].id));
-  }, [categories, categoryId]);
-
-  useEffect(() => {
-    if (filteredProducts.length && !productId) setProductId(String(filteredProducts[0].id));
-  }, [filteredProducts, productId]);
-
-  useEffect(() => {
-    if (regions?.length && !regionId) setRegionId(String(regions[0].id));
-  }, [regions, regionId]);
+  const effectiveCategoryId = categoryId || (categories?.[0] ? String(categories[0].id) : '');
+  const filteredProducts = useMemo(
+    () => allProducts?.filter(p => !effectiveCategoryId || p.category_id === parseInt(effectiveCategoryId)) || [],
+    [allProducts, effectiveCategoryId],
+  );
+  const effectiveProductId =
+    productId && filteredProducts.find(p => String(p.id) === productId)
+      ? productId
+      : filteredProducts[0]
+        ? String(filteredProducts[0].id)
+        : '';
+  const effectiveRegionId = regionId || (regions?.[0] ? String(regions[0].id) : '');
 
   const handleSubmit = async () => {
-    if (!productId || !buyPrice || !sellPrice) { setMsg('ထုတ်ကုန်နှင့် စျေးနှုန်း ထည့်ပါ'); return; }
+    if (!effectiveProductId || !buyPrice || !sellPrice) { setMsg('ထုတ်ကုန်နှင့် စျေးနှုန်း ထည့်ပါ'); return; }
     setSubmitting(true);
     setMsg('');
     const { error } = await apiPost('/api/prices', {
-      product_id: parseInt(productId),
+      product_id: parseInt(effectiveProductId),
       market_id: parseInt(marketId),
       buy_price: parseInt(buyPrice),
       sell_price: parseInt(sellPrice),
@@ -91,17 +90,17 @@ export default function PricePage() {
             </div>
             <div className="grid-3" style={{ gap: 'var(--space-sm)' }}>
               <div className="form-group"><label className="form-label">အမျိုးအစား</label>
-                <select className="form-select" value={categoryId} onChange={(e) => { setCategoryId(e.target.value); setProductId(''); }}>
+                <select className="form-select" value={effectiveCategoryId} onChange={(e) => { setCategoryId(e.target.value); setProductId(''); }}>
                   {categories?.map(c => <option key={c.id} value={c.id}>{c.name_mm}</option>)}
                 </select>
               </div>
               <div className="form-group"><label className="form-label">ထုတ်ကုန်</label>
-                <select className="form-select" value={productId} onChange={(e) => setProductId(e.target.value)}>
+                <select className="form-select" value={effectiveProductId} onChange={(e) => setProductId(e.target.value)}>
                   {filteredProducts.map(p => <option key={p.id} value={p.id}>{p.name_mm}</option>)}
                 </select>
               </div>
               <div className="form-group"><label className="form-label">ပြည်နယ်/တိုင်း</label>
-                <select className="form-select" value={regionId} onChange={(e) => setRegionId(e.target.value)}>
+                <select className="form-select" value={effectiveRegionId} onChange={(e) => setRegionId(e.target.value)}>
                   {regions?.map(r => <option key={r.id} value={r.id}>{r.name_mm}</option>)}
                 </select>
               </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useApi, apiPost, apiPatch, apiDelete } from '@/lib/useApi';
 
 interface Product { id: number; name_mm: string; }
@@ -26,15 +26,15 @@ export default function ListingsPage() {
   const [submitting, setSubmitting] = useState(false);
   const [msg, setMsg] = useState('');
 
-  useEffect(() => { if (products?.length && !productId) setProductId(String(products[0].id)); }, [products, productId]);
-  useEffect(() => { if (regions?.length && !regionId) setRegionId(String(regions[0].id)); }, [regions, regionId]);
+  const effectiveProductId = productId || (products?.[0] ? String(products[0].id) : '');
+  const effectiveRegionId = regionId || (regions?.[0] ? String(regions[0].id) : '');
 
   const handleCreate = async () => {
-    if (!productId || !quantity || !targetPrice) { setMsg('အချက်အလက် အပြည့်အစုံ ထည့်ပါ'); return; }
+    if (!effectiveProductId || !quantity || !targetPrice) { setMsg('အချက်အလက် အပြည့်အစုံ ထည့်ပါ'); return; }
     setSubmitting(true);
     const { error } = await apiPost('/api/listings', {
-      type, product_id: parseInt(productId), quantity: parseInt(quantity),
-      target_price: parseInt(targetPrice), region_id: parseInt(regionId),
+      type, product_id: parseInt(effectiveProductId), quantity: parseInt(quantity),
+      target_price: parseInt(targetPrice), region_id: parseInt(effectiveRegionId),
       availability, pickup_available: pickup,
     });
     if (error) { setMsg(`Error: ${error}`); }
@@ -77,14 +77,14 @@ export default function ListingsPage() {
               </select>
             </div>
             <div className="form-group"><label className="form-label">ထုတ်ကုန်</label>
-              <select className="form-select" value={productId} onChange={(e) => setProductId(e.target.value)}>
+              <select className="form-select" value={effectiveProductId} onChange={(e) => setProductId(e.target.value)}>
                 {products?.map(p => <option key={p.id} value={p.id}>{p.name_mm}</option>)}
               </select>
             </div>
             <div className="form-group"><label className="form-label">ပမာဏ (တင်း)</label><input type="number" className="form-input" placeholder="ဥပမာ - ၅၀၀" value={quantity} onChange={(e) => setQuantity(e.target.value)} /></div>
             <div className="form-group"><label className="form-label">ပစ်မှတ်စျေး (Ks)</label><input type="number" className="form-input" placeholder="ဥပမာ - ၅၂,၀၀၀" value={targetPrice} onChange={(e) => setTargetPrice(e.target.value)} /></div>
             <div className="form-group"><label className="form-label">ဒေသ</label>
-              <select className="form-select" value={regionId} onChange={(e) => setRegionId(e.target.value)}>
+              <select className="form-select" value={effectiveRegionId} onChange={(e) => setRegionId(e.target.value)}>
                 {regions?.map(r => <option key={r.id} value={r.id}>{r.name_mm}</option>)}
               </select>
             </div>

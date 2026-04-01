@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useApi } from '@/lib/useApi';
 
 const toBurmese = (str: string) => str.replace(/[0-9]/g, d => '၀၁၂၃၄၅၆၇၈၉'[parseInt(d)]);
@@ -121,22 +121,22 @@ export default function MarketPage() {
 
   const { data: regions } = useApi<Region[]>('/api/regions');
   const { data: categories } = useApi<Category[]>('/api/categories');
-  const { data: markets } = useApi<Market[]>('/api/markets');
   const { data: allProducts } = useApi<Product[]>('/api/products');
-
-  useEffect(() => { if (regions?.length && !activeRegionId) setActiveRegionId(String(regions[0].id)); }, [regions, activeRegionId]);
-  useEffect(() => { if (categories?.length && !activeCategoryId) setActiveCategoryId(String(categories[0].id)); }, [categories, activeCategoryId]);
-
-  const filteredProducts = allProducts?.filter(p => !activeCategoryId || p.category_id === parseInt(activeCategoryId)) || [];
-  
-  useEffect(() => { 
-    if (filteredProducts.length > 0 && (!activeProductId || !filteredProducts.find(p => String(p.id) === activeProductId))) {
-      setActiveProductId(String(filteredProducts[0].id)); 
-    }
-  }, [filteredProducts, activeProductId]);
+  const effectiveRegionId = activeRegionId || (regions?.[0] ? String(regions[0].id) : '');
+  const effectiveCategoryId = activeCategoryId || (categories?.[0] ? String(categories[0].id) : '');
+  const filteredProducts = useMemo(
+    () => allProducts?.filter(p => !effectiveCategoryId || p.category_id === parseInt(effectiveCategoryId)) || [],
+    [allProducts, effectiveCategoryId],
+  );
+  const effectiveProductId =
+    activeProductId && filteredProducts.find(p => String(p.id) === activeProductId)
+      ? activeProductId
+      : filteredProducts[0]
+        ? String(filteredProducts[0].id)
+        : '';
 
   const { data: marketData, loading: marketLoading } = useApi<any[]>(
-    activeProductId ? `/api/market?product_id=${activeProductId}${activeRegionId ? `&region_id=${activeRegionId}` : ''}` : null
+    effectiveProductId ? `/api/market?product_id=${effectiveProductId}${effectiveRegionId ? `&region_id=${effectiveRegionId}` : ''}` : null
   );
 
   const referenceMarketId = marketData && marketData.length > 0 ? String(marketData[0].market.id) : '';
@@ -144,8 +144,8 @@ export default function MarketPage() {
   interface ChartDataRes { data: ChartDataPoint[]; stats: { current: number; high: number; low: number; change: number } }
   
   const { data: chartRes, loading: chartLoading } = useApi<ChartDataRes>(
-    activeProductId && referenceMarketId 
-      ? `/api/market/chart?product_id=${activeProductId}&market_id=${referenceMarketId}&days=${activeRange}` 
+    effectiveProductId && referenceMarketId 
+      ? `/api/market/chart?product_id=${effectiveProductId}&market_id=${referenceMarketId}&days=${activeRange}` 
       : null
   );
 
@@ -182,13 +182,13 @@ export default function MarketPage() {
         <div className="card-title mb-md">စျေးကွက်ရွေးချယ်ရန်</div>
         <div className="grid-3 mb-md" style={{ gap: 'var(--space-sm)' }}>
           <div className="form-group"><label className="form-label">အမျိုးအစား</label>
-            <select className="form-select" value={activeCategoryId} onChange={(e) => setActiveCategoryId(e.target.value)}>
+            <select className="form-select" value={effectiveCategoryId} onChange={(e) => { setActiveCategoryId(e.target.value); setActiveProductId(''); }}>
               <option value="">အားလုံး</option>
               {categories?.map(c => <option key={c.id} value={c.id}>{c.name_mm}</option>)}
             </select>
           </div>
           <div className="form-group"><label className="form-label">ပြည်နယ်/တိုင်း</label>
-            <select className="form-select" value={activeRegionId} onChange={(e) => setActiveRegionId(e.target.value)}>
+            <select className="form-select" value={effectiveRegionId} onChange={(e) => setActiveRegionId(e.target.value)}>
               <option value="">အားလုံး</option>
               {regions?.map(r => <option key={r.id} value={r.id}>{r.name_mm}</option>)}
             </select>
@@ -198,7 +198,7 @@ export default function MarketPage() {
         {/* Product Tabs */}
         <div className="filter-bar" style={{ marginTop: 0 }}>
           {filteredProducts.map(p => (
-            <button key={p.id} className={`filter-chip ${activeProductId === String(p.id) ? 'active' : ''}`} onClick={() => setActiveProductId(String(p.id))}>
+            <button key={p.id} className={`filter-chip ${effectiveProductId === String(p.id) ? 'active' : ''}`} onClick={() => setActiveProductId(String(p.id))}>
               {p.name_mm}
             </button>
           ))}
@@ -209,7 +209,7 @@ export default function MarketPage() {
       {/* Price Summary */}
       <div className="grid-3 mb-lg">
         <div className="stat-card">
-          <div className="stat-label">လက်ရှိစျေး ({filteredProducts.find(p=>String(p.id)===activeProductId)?.name_mm || '—'})</div>
+          <div className="stat-label">လက်ရှိစျေး ({filteredProducts.find(p=>String(p.id)===effectiveProductId)?.name_mm || '—'})</div>
           <div className="stat-value">{stats?.current ? `${stats.current.toLocaleString()} Ks` : '—'}</div>
           {stats?.change !== undefined && (
             <div className={`stat-change ${stats.change >= 0 ? 'up' : 'down'}`}>

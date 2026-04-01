@@ -36,6 +36,20 @@ Good FastAPI hosting options:
 3. Fly.io
 4. VPS
 
+## Recommended free setup
+
+If you want the cheapest working setup:
+
+1. Deploy Next.js on Vercel
+2. Deploy FastAPI on Render free
+3. Set `FASTAPI_BASE_URL` in Vercel
+
+This repo now includes:
+
+- [render.yaml](/d:/climateAi/taung-thu-app/render.yaml)
+
+So Render can detect the service blueprint directly from the repository.
+
 ## What Vercel needs
 
 In the Vercel project settings, add:
@@ -109,6 +123,28 @@ Local fallback:
 5. Confirm:
    - `/health` returns `200`
    - `/predict` returns valid JSON
+
+### Render free setup
+
+If using Render:
+
+1. Create a new Web Service from this GitHub repo
+2. Let Render read:
+   - [render.yaml](/d:/climateAi/taung-thu-app/render.yaml)
+3. Confirm these values:
+   - runtime: `python`
+   - plan: `free`
+   - build command: `pip install -r ml/requirements.txt`
+   - start command: `python -m uvicorn ml.api:app --host 0.0.0.0 --port $PORT`
+4. Wait for first startup
+5. Open:
+   - `/health`
+
+Important:
+
+- First startup may be slow because the app can bootstrap the ML artifact automatically.
+- Free Render services may sleep after inactivity.
+- The first request after sleep may take longer than normal.
 
 ## Important note about model artifacts
 

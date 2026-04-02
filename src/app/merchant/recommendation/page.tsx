@@ -45,8 +45,8 @@ export default function MerchantRecommendationPage() {
     () => merchantCropOptions.find((crop) => crop.id === selectedCropId) ?? null,
     [selectedCropId],
   );
-  const [region, setRegion] = useState(supportedRegions[0]);
-  const [market, setMarket] = useState(regionMarkets[supportedRegions[0]][0]);
+  const [region, setRegion] = useState<string>(supportedRegions[0]);
+  const [market, setMarket] = useState<string>(regionMarkets[supportedRegions[0]][0]);
   const [state, setState] = useState<MerchantApiState>({ data: null, error: null, loading: false });
 
   useEffect(() => {

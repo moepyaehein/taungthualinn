@@ -3,6 +3,22 @@ import { NextResponse } from 'next/server';
 import { getAuthUser, isAdmin } from '@/lib/auth-helpers';
 import { createClient } from '@/lib/supabase/server';
 
+async function parseProxyResponse(response: Response) {
+  const text = await response.text();
+  if (!text) return {};
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    const normalized = text.replace(/\s+/g, ' ').trim();
+    return {
+      error: normalized.startsWith('<')
+        ? 'ML service returned an HTML error page. It may still be waking up on Render.'
+        : normalized.slice(0, 200),
+    };
+  }
+}
+
 function getFastApiBaseUrl() {
   const configured = process.env.FASTAPI_BASE_URL?.trim();
   if (!configured) {
@@ -40,7 +56,7 @@ export async function GET() {
       },
     );
 
-    const payload = await response.json();
+    const payload = await parseProxyResponse(response);
     return NextResponse.json(payload, { status: response.status });
   } catch (error) {
     return NextResponse.json(

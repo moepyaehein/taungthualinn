@@ -9,7 +9,8 @@ from pydantic import BaseModel
 from ml.recommendation_pipeline import (
     build_latest_feature_row,
     derive_recommendation,
-    ensure_runtime_artifacts,
+    load_artifact,
+    prepare_training_artifacts,
 )
 
 
@@ -44,11 +45,12 @@ def _load_model_state() -> None:
         MODEL_STATE["error"] = None
 
     try:
-        artifact, training_artifacts, bootstrapped_artifact = ensure_runtime_artifacts()
+        artifact = load_artifact()
+        training_artifacts = prepare_training_artifacts()
         with MODEL_LOCK:
             MODEL_STATE["artifact"] = artifact
             MODEL_STATE["training_artifacts"] = training_artifacts
-            MODEL_STATE["bootstrapped_artifact"] = bootstrapped_artifact
+            MODEL_STATE["bootstrapped_artifact"] = False
             MODEL_STATE["ready"] = True
     except Exception as error:  # noqa: BLE001
         with MODEL_LOCK:

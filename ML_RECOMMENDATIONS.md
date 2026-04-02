@@ -46,12 +46,12 @@ Health check:
 curl http://127.0.0.1:8000/health
 ```
 
-If the model artifact is missing, FastAPI now bootstraps it automatically from:
+The production deployment now expects the trained artifact to be present in the repo:
 
-- `mock_market_prices_1y_myanmar.xlsx`
-- `myanmar_weather_combined.csv`
+- `ml/artifacts/recommendation_forecast.joblib`
+- `ml/reports/recommendation_metrics.json`
 
-That means first startup can take longer on a fresh deployment.
+FastAPI loads that artifact at startup and does not retrain in production.
 
 The Next.js app calls the FastAPI server through:
 

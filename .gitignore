@@ -35,6 +35,10 @@ yarn-error.log*
 .venv/
 ml/artifacts/
 ml/reports/
+!ml/artifacts/
+!ml/artifacts/recommendation_forecast.joblib
+!ml/reports/
+!ml/reports/recommendation_metrics.json
 ml/__pycache__/
 *.pyc
 devserver*.log

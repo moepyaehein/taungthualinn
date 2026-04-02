@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
       .from('regions')
       .select(`
         *,
-        markets(id, name_mm, name_en)
+        markets(id, name_mm, region_id)
       `)
       .order('name_mm');
   } else {

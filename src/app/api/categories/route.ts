@@ -12,9 +12,9 @@ export async function GET() {
     .from('categories')
     .select(`
       *,
-      products(id, name_mm, name_en, sort_order)
+      products(id, name_mm, category_id)
     `)
-    .order('sort_order');
+    .order('name_mm');
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -43,8 +43,6 @@ export async function POST(request: NextRequest) {
     .from('categories')
     .insert({
       name_mm: body.name_mm,
-      name_en: body.name_en || null,
-      sort_order: body.sort_order || 0,
     })
     .select()
     .single();
@@ -74,8 +72,6 @@ export async function PATCH(request: NextRequest) {
 
   const updates: Record<string, unknown> = {};
   if (body.name_mm) updates.name_mm = body.name_mm;
-  if (body.name_en !== undefined) updates.name_en = body.name_en;
-  if (body.sort_order !== undefined) updates.sort_order = body.sort_order;
 
   const { data, error } = await supabase
     .from('categories')

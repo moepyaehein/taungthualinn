@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
       *,
       category:categories!category_id(id, name_mm)
     `)
-    .order('sort_order');
+    .order('name_mm');
 
   if (categoryId) query = query.eq('category_id', parseInt(categoryId));
 

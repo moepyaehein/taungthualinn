@@ -40,6 +40,9 @@ export default function PricePage() {
         ? String(filteredProducts[0].id)
         : '';
   const effectiveRegionId = regionId || (regions?.[0] ? String(regions[0].id) : '');
+  const pendingCount = recentPrices?.filter((price) => price.status === 'pending').length || 0;
+  const approvedCount =
+    recentPrices?.filter((price) => ['peer_verified', 'admin_verified'].includes(price.status)).length || 0;
 
   const handleSubmit = async () => {
     if (!effectiveProductId || !buyPrice || !sellPrice) { setMsg('ထုတ်ကုန်နှင့် စျေးနှုန်း ထည့်ပါ'); return; }
@@ -79,6 +82,23 @@ export default function PricePage() {
       </div>
 
       {msg && <div className={`alert-banner ${msg.includes('Error') ? 'danger' : 'success'} mb-lg`}><div>{msg}</div></div>}
+
+      <div className="card mb-lg" style={{ border: '1px solid rgba(5, 150, 105, 0.18)', background: 'linear-gradient(135deg, rgba(5,150,105,0.06), rgba(14,165,233,0.04))' }}>
+        <div className="card-title mb-md">Live retraining test flow</div>
+        <div style={{ display: 'grid', gap: '10px', fontSize: 'var(--font-sm)', color: 'var(--gray-600)' }}>
+          <div>1. Submit a fresh merchant price below.</div>
+          <div>2. Ask an admin to verify it, or use demo retrain while it is still pending.</div>
+          <div>3. Admin opens the ML panel and starts retraining.</div>
+          <div>4. New approved portal rows will be included in the next model update.</div>
+        </div>
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: 'var(--space-md)' }}>
+          <span className="verify-badge pending">Pending submissions: {pendingCount}</span>
+          <span className="verify-badge verified">Approved submissions: {approvedCount}</span>
+        </div>
+        <div style={{ marginTop: 'var(--space-md)', color: 'var(--gray-500)', fontSize: 'var(--font-sm)' }}>
+          Demo retraining can include pending prices for testing. Production retraining should use only peer-verified or admin-verified prices.
+        </div>
+      </div>
 
       {/* Single Price Upload */}
       {mode === 'single' && (

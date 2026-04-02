@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from datetime import datetime, timezone
+import os
 from threading import Lock, Thread
 from typing import Any
 
@@ -11,6 +13,8 @@ from ml.recommendation_pipeline import (
     derive_recommendation,
     load_artifact,
     prepare_training_artifacts,
+    save_artifacts,
+    train_models,
 )
 
 
@@ -26,15 +30,25 @@ class PredictionRequest(BaseModel):
     unit: str | None = None
 
 
+class RetrainRequest(BaseModel):
+    include_pending_demo: bool = False
+
+
 MODEL_STATE: dict[str, Any] = {
     "ready": False,
     "loading": False,
+    "training": False,
     "bootstrapped_artifact": False,
     "artifact": None,
     "training_artifacts": None,
     "error": None,
+    "training_error": None,
+    "last_retrained_at": None,
+    "last_training_mode": None,
+    "source_summary": None,
 }
 MODEL_LOCK = Lock()
+ADMIN_KEY = os.getenv("ML_ADMIN_KEY", "").strip()
 
 
 def _load_model_state() -> None:
@@ -52,12 +66,57 @@ def _load_model_state() -> None:
             MODEL_STATE["training_artifacts"] = training_artifacts
             MODEL_STATE["bootstrapped_artifact"] = False
             MODEL_STATE["ready"] = True
+            MODEL_STATE["source_summary"] = training_artifacts.source_summary
+            MODEL_STATE["last_training_mode"] = "approved_only"
     except Exception as error:  # noqa: BLE001
         with MODEL_LOCK:
             MODEL_STATE["error"] = str(error)
     finally:
         with MODEL_LOCK:
             MODEL_STATE["loading"] = False
+
+
+def _retrain_model_state(include_pending_demo: bool = False) -> None:
+    with MODEL_LOCK:
+        if MODEL_STATE["training"]:
+            return
+        MODEL_STATE["training"] = True
+        MODEL_STATE["training_error"] = None
+
+    try:
+        statuses = (
+            ("peer_verified", "admin_verified", "pending")
+            if include_pending_demo
+            else ("peer_verified", "admin_verified")
+        )
+        training_artifacts = prepare_training_artifacts(portal_statuses=statuses)
+        model_7d, model_30d, metrics = train_models(training_artifacts)
+        save_artifacts(model_7d, model_30d, training_artifacts, metrics)
+        artifact = load_artifact()
+
+        with MODEL_LOCK:
+            MODEL_STATE["artifact"] = artifact
+            MODEL_STATE["training_artifacts"] = training_artifacts
+            MODEL_STATE["ready"] = True
+            MODEL_STATE["error"] = None
+            MODEL_STATE["source_summary"] = training_artifacts.source_summary
+            MODEL_STATE["last_retrained_at"] = datetime.now(timezone.utc).isoformat()
+            MODEL_STATE["last_training_mode"] = (
+                "include_pending_demo" if include_pending_demo else "approved_only"
+            )
+    except Exception as error:  # noqa: BLE001
+        with MODEL_LOCK:
+            MODEL_STATE["training_error"] = str(error)
+    finally:
+        with MODEL_LOCK:
+            MODEL_STATE["training"] = False
+
+
+def require_admin_key(admin_key: str | None) -> None:
+    if not ADMIN_KEY:
+        raise HTTPException(status_code=503, detail="ML admin key is not configured.")
+    if admin_key != ADMIN_KEY:
+        raise HTTPException(status_code=403, detail="Invalid admin key.")
 
 
 @app.on_event("startup")
@@ -71,8 +130,36 @@ def health() -> dict[str, str | bool | None]:
         "status": "ok",
         "artifact_ready": bool(MODEL_STATE["ready"]),
         "loading": bool(MODEL_STATE["loading"]),
+        "training": bool(MODEL_STATE["training"]),
         "bootstrapped_artifact": bool(MODEL_STATE["bootstrapped_artifact"]),
         "error": MODEL_STATE["error"],
+        "training_error": MODEL_STATE["training_error"],
+        "last_retrained_at": MODEL_STATE["last_retrained_at"],
+        "last_training_mode": MODEL_STATE["last_training_mode"],
+        "source_summary": MODEL_STATE["source_summary"],
+    }
+
+
+@app.get("/training/status")
+def training_status(admin_key: str | None = None) -> dict[str, Any]:
+    require_admin_key(admin_key)
+    return health()
+
+
+@app.post("/retrain")
+def retrain(request: RetrainRequest, admin_key: str | None = None) -> dict[str, Any]:
+    require_admin_key(admin_key)
+
+    if MODEL_STATE["training"]:
+        return {
+            "status": "already_running",
+            "detail": "A retraining job is already in progress.",
+        }
+
+    Thread(target=_retrain_model_state, args=(request.include_pending_demo,), daemon=True).start()
+    return {
+        "status": "started",
+        "include_pending_demo": request.include_pending_demo,
     }
 
 

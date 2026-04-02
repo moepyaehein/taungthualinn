@@ -4,6 +4,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 import json
+import os
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
 
 import joblib
 import numpy as np
@@ -21,6 +24,72 @@ DEFAULT_MARKET_DATASET = ROOT / "mock_market_prices_1y_myanmar.xlsx"
 DEFAULT_WEATHER_DATASET = ROOT / "myanmar_weather_combined.csv"
 ARTIFACT_DIR = ROOT / "ml" / "artifacts"
 REPORT_DIR = ROOT / "ml" / "reports"
+ENV_PATHS = [ROOT / ".env.local", ROOT / ".env"]
+
+
+def get_env_value(key: str, default: str = "") -> str:
+    direct = os.getenv(key)
+    if direct:
+        return direct.strip()
+
+    for path in ENV_PATHS:
+        if not path.exists():
+            continue
+        for line in path.read_text(encoding="utf-8").splitlines():
+            stripped = line.strip()
+            if not stripped or stripped.startswith("#") or "=" not in stripped:
+                continue
+            env_key, env_value = stripped.split("=", 1)
+            if env_key.strip() == key:
+                return env_value.strip().strip('"').strip("'")
+    return default
+
+
+DEFAULT_SUPABASE_URL = get_env_value("NEXT_PUBLIC_SUPABASE_URL")
+DEFAULT_SUPABASE_SERVICE_ROLE_KEY = get_env_value("SUPABASE_SERVICE_ROLE_KEY")
+
+PORTAL_PRODUCT_TO_DATASET_CROP = {
+    "နှမ်း": "Brown Sesame",
+    "ရွှေဘိုပေါ်ဆန်း": "Paw San Hmwe",
+}
+
+PORTAL_REGION_TO_DATASET_REGION = {
+    "မန္တလေးတိုင်းဒေသကြီး": "Mandalay Region",
+    "စစ်ကိုင်းတိုင်းဒေသကြီး": "Sagaing Region",
+    "မကွေးတိုင်းဒေသကြီး": "Magway Region",
+    "ရှမ်းပြည်နယ်": "Shan State",
+    "ရန်ကုန်တိုင်းဒေသကြီး": "Yangon Region",
+    "ဧရာဝတီတိုင်းဒေသကြီး": "Ayeyarwady Region",
+    "ပဲခူးတိုင်းဒေသကြီး": "Bago Region",
+    "ကရင်ပြည်နယ်": "Kayin State",
+    "မွန်ပြည်နယ်": "Mon State",
+    "နေပြည်တော်": "Naypyidaw",
+}
+
+PORTAL_MARKET_TO_DATASET_MARKET = {
+    "မန္တလေးပွဲရုံ": "Pyigyidagun Commodity Center",
+    "မိတ္ထီလာပွဲရုံ": "Pyigyidagun Commodity Center",
+    "မကွေးကုန်စည်ဒိုင်": "Pakokku Produce Market",
+    "အောင်ပန်းဈေး": "Taunggyi Aye Thar Yar Market",
+}
+
+DEFAULT_MARKET_BY_REGION = {
+    "Yangon Region": "Bayintnaung Wholesale Market",
+    "Mandalay Region": "Pyigyidagun Commodity Center",
+    "Sagaing Region": "Monywa Grain Market",
+    "Magway Region": "Pakokku Produce Market",
+    "Ayeyarwady Region": "Pathein Market Yard",
+    "Bago Region": "Pyay Market Yard",
+    "Shan State": "Taunggyi Aye Thar Yar Market",
+    "Kayin State": "Hpa-An Market Yard",
+    "Mon State": "Mawlamyine Central Market",
+    "Naypyidaw": "Thapyaygone Commodity Depot",
+}
+
+PORTAL_CATEGORY_BY_CROP = {
+    "Brown Sesame": ("Oil Crop", "Sesame"),
+    "Paw San Hmwe": ("Rice", "Rice"),
+}
 
 
 def normalize_region_name(value: str) -> str:
@@ -53,6 +122,137 @@ def normalize_market_prices(market_path: Path) -> pd.DataFrame:
     market_df[numeric_columns] = market_df[numeric_columns].apply(pd.to_numeric, errors="coerce")
     market_df = market_df.sort_values(["series_key", "date"]).reset_index(drop=True)
     return market_df
+
+
+def fetch_live_portal_prices(
+    supabase_url: str = DEFAULT_SUPABASE_URL,
+    service_role_key: str = DEFAULT_SUPABASE_SERVICE_ROLE_KEY,
+    limit: int = 5000,
+    statuses: tuple[str, ...] = ("peer_verified", "admin_verified"),
+) -> pd.DataFrame:
+    if not supabase_url or not service_role_key:
+        return pd.DataFrame()
+
+    status_filter = ",".join(statuses)
+    query = urlencode(
+        {
+            "select": (
+                "created_at,buy_price,sell_price,quality,unit,status,"
+                "product:products!product_id(name_mm),"
+                "market:markets!market_id(name_mm,region:regions!region_id(name_mm))"
+            ),
+            "status": f"in.({status_filter})",
+            "order": "created_at.asc",
+            "limit": str(limit),
+        },
+        safe="(),:!",
+    )
+
+    request = Request(
+        f"{supabase_url.rstrip('/')}/rest/v1/price_submissions?{query}",
+        headers={
+            "apikey": service_role_key,
+            "Authorization": f"Bearer {service_role_key}",
+        },
+    )
+
+    try:
+        with urlopen(request, timeout=30) as response:  # noqa: S310
+            records = json.loads(response.read().decode("utf-8"))
+    except Exception:
+        return pd.DataFrame()
+
+    normalized_rows: list[dict[str, Any]] = []
+    for record in records:
+        product = record.get("product") or {}
+        market = record.get("market") or {}
+        region = market.get("region") or {}
+
+        product_name_mm = str(product.get("name_mm") or "").strip()
+        region_name_mm = str(region.get("name_mm") or "").strip()
+        market_name_mm = str(market.get("name_mm") or "").strip()
+
+        crop_name = PORTAL_PRODUCT_TO_DATASET_CROP.get(product_name_mm)
+        location_main = PORTAL_REGION_TO_DATASET_REGION.get(region_name_mm)
+        if not crop_name or not location_main:
+            continue
+
+        location = PORTAL_MARKET_TO_DATASET_MARKET.get(
+            market_name_mm, DEFAULT_MARKET_BY_REGION.get(location_main)
+        )
+        if not location:
+            continue
+
+        main_category, item_category = PORTAL_CATEGORY_BY_CROP.get(
+            crop_name, ("Portal Submission", product_name_mm or crop_name)
+        )
+
+        buy_price = pd.to_numeric(record.get("buy_price"), errors="coerce")
+        sell_price = pd.to_numeric(record.get("sell_price"), errors="coerce")
+        if pd.isna(buy_price) or pd.isna(sell_price):
+            continue
+
+        quality = str(record.get("quality") or "standard").strip() or "standard"
+        unit = str(record.get("unit") or "basket").strip() or "basket"
+        created_at = pd.to_datetime(record.get("created_at"), errors="coerce")
+        if pd.isna(created_at):
+            continue
+
+        normalized_rows.append(
+            {
+                "date": created_at.normalize(),
+                "supply_price": float(buy_price),
+                "demand_price": float(sell_price),
+                "lowest_price": float(min(buy_price, sell_price)),
+                "highest_price": float(max(buy_price, sell_price)),
+                "main_category": main_category,
+                "item_category": item_category,
+                "crop_name": crop_name,
+                "quality": quality,
+                "unit": unit,
+                "location_main": location_main,
+                "location": location,
+                "normalized_region": normalize_region_name(location_main),
+            }
+        )
+
+    if not normalized_rows:
+        return pd.DataFrame()
+
+    live_df = pd.DataFrame(normalized_rows)
+    live_df["series_key"] = (
+        live_df["crop_name"].astype(str)
+        + " | "
+        + live_df["quality"].astype(str)
+        + " | "
+        + live_df["unit"].astype(str)
+        + " | "
+        + live_df["location_main"].astype(str)
+        + " | "
+        + live_df["location"].astype(str)
+    )
+
+    aggregate_keys = [
+        "date",
+        "main_category",
+        "item_category",
+        "crop_name",
+        "quality",
+        "unit",
+        "location_main",
+        "location",
+        "normalized_region",
+        "series_key",
+    ]
+    live_df = (
+        live_df.groupby(aggregate_keys, as_index=False)[
+            ["supply_price", "demand_price", "lowest_price", "highest_price"]
+        ]
+        .mean()
+        .sort_values(["series_key", "date"])
+        .reset_index(drop=True)
+    )
+    return live_df
 
 
 def normalize_weather(weather_path: Path) -> pd.DataFrame:
@@ -293,28 +493,54 @@ def evaluate_predictions(y_true: pd.Series, y_pred: np.ndarray) -> dict[str, flo
 @dataclass
 class TrainingArtifacts:
     market_df: pd.DataFrame
+    live_market_df: pd.DataFrame
     weather_df: pd.DataFrame
     frame: pd.DataFrame
     train_df: pd.DataFrame
     valid_df: pd.DataFrame
     test_df: pd.DataFrame
+    source_summary: dict[str, int]
 
 
 def prepare_training_artifacts(
     market_path: Path = DEFAULT_MARKET_DATASET,
     weather_path: Path = DEFAULT_WEATHER_DATASET,
+    include_portal_data: bool = True,
+    supabase_url: str = DEFAULT_SUPABASE_URL,
+    service_role_key: str = DEFAULT_SUPABASE_SERVICE_ROLE_KEY,
+    portal_statuses: tuple[str, ...] = ("peer_verified", "admin_verified"),
 ) -> TrainingArtifacts:
     market_df = normalize_market_prices(market_path)
+    live_market_df = (
+        fetch_live_portal_prices(
+            supabase_url=supabase_url,
+            service_role_key=service_role_key,
+            statuses=portal_statuses,
+        )
+        if include_portal_data
+        else pd.DataFrame()
+    )
+    if not live_market_df.empty:
+        market_df = pd.concat([market_df, live_market_df], ignore_index=True, sort=False)
+        market_df = market_df.sort_values(["series_key", "date"]).reset_index(drop=True)
+
     weather_df = normalize_weather(weather_path)
     frame = build_training_frame(market_df, weather_df)
     train_df, valid_df, test_df = time_split_frame(frame)
     return TrainingArtifacts(
         market_df=market_df,
+        live_market_df=live_market_df,
         weather_df=weather_df,
         frame=frame,
         train_df=train_df,
         valid_df=valid_df,
         test_df=test_df,
+        source_summary={
+            "historical_market_rows": int(len(market_df) - len(live_market_df)),
+            "live_portal_rows": int(len(live_market_df)),
+            "weather_rows": int(len(weather_df)),
+            "training_frame_rows": int(len(frame)),
+        },
     )
 
 
@@ -349,6 +575,7 @@ def train_models(artifacts: TrainingArtifacts) -> tuple[Pipeline, Pipeline, dict
         "training_rows": int(len(artifacts.train_df)),
         "validation_rows": int(len(artifacts.valid_df)),
         "test_rows": int(len(artifacts.test_df)),
+        "source_summary": artifacts.source_summary,
     }
     return model_7d, model_30d, metrics
 
@@ -372,6 +599,7 @@ def save_artifacts(
         "latest_training_date": artifacts.frame["date"].max(),
         "market_dataset_path": str(DEFAULT_MARKET_DATASET),
         "weather_dataset_path": str(DEFAULT_WEATHER_DATASET),
+        "live_portal_rows": int(len(artifacts.live_market_df)),
     }
     artifact_path = ARTIFACT_DIR / "recommendation_forecast.joblib"
     report_path = REPORT_DIR / "recommendation_metrics.json"
@@ -393,10 +621,16 @@ def ensure_runtime_artifacts(
     resolved_path = artifact_path or (ARTIFACT_DIR / "recommendation_forecast.joblib")
 
     if resolved_path.exists():
-        training_artifacts = prepare_training_artifacts(market_path=market_path, weather_path=weather_path)
+        training_artifacts = prepare_training_artifacts(
+            market_path=market_path,
+            weather_path=weather_path,
+        )
         return load_artifact(resolved_path), training_artifacts, False
 
-    training_artifacts = prepare_training_artifacts(market_path=market_path, weather_path=weather_path)
+    training_artifacts = prepare_training_artifacts(
+        market_path=market_path,
+        weather_path=weather_path,
+    )
     model_7d, model_30d, metrics = train_models(training_artifacts)
     save_artifacts(model_7d, model_30d, training_artifacts, metrics)
     return load_artifact(resolved_path), training_artifacts, True

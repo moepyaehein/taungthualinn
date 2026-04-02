@@ -25,5 +25,11 @@
   },
   "training_rows": 28080,
   "validation_rows": 6000,
-  "test_rows": 6120
+  "test_rows": 6120,
+  "source_summary": {
+    "historical_market_rows": 43800,
+    "live_portal_rows": 0,
+    "weather_rows": 8288,
+    "training_frame_rows": 40200
+  }
 }

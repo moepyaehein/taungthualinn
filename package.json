@@ -8,6 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "ml:train": ".\\\\.venv\\\\Scripts\\\\python.exe .\\\\ml\\\\train_recommendation_model.py",
+    "ml:train:portal": ".\\\\.venv\\\\Scripts\\\\python.exe .\\\\ml\\\\train_recommendation_model.py",
+    "ml:train:portal:demo": ".\\\\.venv\\\\Scripts\\\\python.exe .\\\\ml\\\\train_recommendation_model.py --include-pending-demo",
+    "ml:inspect:portal": ".\\\\.venv\\\\Scripts\\\\python.exe .\\\\ml\\\\inspect_portal_training_data.py",
     "ml:predict:farmer": ".\\\\.venv\\\\Scripts\\\\python.exe .\\\\ml\\\\predict_recommendation.py --role farmer",
     "ml:predict:merchant": ".\\\\.venv\\\\Scripts\\\\python.exe .\\\\ml\\\\predict_recommendation.py --role merchant",
     "ml:api": ".\\\\.venv\\\\Scripts\\\\python.exe -m uvicorn ml.api:app --host 127.0.0.1 --port 8000"

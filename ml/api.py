@@ -11,6 +11,7 @@ from pydantic import BaseModel
 from ml.recommendation_pipeline import (
     build_latest_feature_row,
     derive_recommendation,
+    get_env_value,
     load_artifact,
     prepare_training_artifacts,
     save_artifacts,
@@ -49,7 +50,7 @@ MODEL_STATE: dict[str, Any] = {
     "source_summary": None,
 }
 MODEL_LOCK = Lock()
-ADMIN_KEY = os.getenv("ML_ADMIN_KEY", "").strip()
+ADMIN_KEY = get_env_value("ML_ADMIN_KEY").strip()
 
 
 def _load_model_state() -> None:
@@ -148,7 +149,7 @@ def startup_event() -> None:
 
 
 @app.get("/health")
-def health() -> dict[str, str | bool | None]:
+def health() -> dict[str, Any]:
     return {
         "status": "ok",
         "artifact_ready": bool(MODEL_STATE["ready"]),

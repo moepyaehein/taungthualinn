@@ -20,6 +20,7 @@ interface MlSourceSummary {
   historical_market_rows?: number;
   live_portal_rows?: number;
   weather_rows?: number;
+  training_frame_rows?: number;
   training_rows?: number;
 }
 
@@ -278,7 +279,9 @@ export default function AdminHomePage() {
           </div>
           <div className="stat-card">
             <div className="stat-label">Training Rows</div>
-            <div className="stat-value">{formatCount(sourceSummary?.training_rows)}</div>
+            <div className="stat-value">
+              {formatCount(sourceSummary?.training_frame_rows ?? sourceSummary?.training_rows)}
+            </div>
           </div>
         </div>
 

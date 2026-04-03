@@ -194,9 +194,12 @@ def fetch_live_portal_prices(
 
         quality = str(record.get("quality") or "standard").strip() or "standard"
         unit = str(record.get("unit") or "basket").strip() or "basket"
-        created_at = pd.to_datetime(record.get("created_at"), errors="coerce")
+        # Supabase returns timezone-aware timestamps. Convert them to naive
+        # datetimes so they can be combined and sorted with the historical data.
+        created_at = pd.to_datetime(record.get("created_at"), errors="coerce", utc=True)
         if pd.isna(created_at):
             continue
+        created_at = created_at.tz_convert(None)
 
         normalized_rows.append(
             {

@@ -37,6 +37,7 @@ class RetrainRequest(BaseModel):
 MODEL_STATE: dict[str, Any] = {
     "ready": False,
     "loading": False,
+    "frame_loading": False,
     "training": False,
     "bootstrapped_artifact": False,
     "artifact": None,
@@ -60,13 +61,12 @@ def _load_model_state() -> None:
 
     try:
         artifact = load_artifact()
-        training_artifacts = prepare_training_artifacts()
         with MODEL_LOCK:
             MODEL_STATE["artifact"] = artifact
-            MODEL_STATE["training_artifacts"] = training_artifacts
+            MODEL_STATE["training_artifacts"] = None
             MODEL_STATE["bootstrapped_artifact"] = False
             MODEL_STATE["ready"] = True
-            MODEL_STATE["source_summary"] = training_artifacts.source_summary
+            MODEL_STATE["source_summary"] = artifact.get("metrics", {}).get("source_summary")
             MODEL_STATE["last_training_mode"] = "approved_only"
     except Exception as error:  # noqa: BLE001
         with MODEL_LOCK:
@@ -74,6 +74,29 @@ def _load_model_state() -> None:
     finally:
         with MODEL_LOCK:
             MODEL_STATE["loading"] = False
+
+
+def _ensure_training_artifacts_loaded() -> bool:
+    with MODEL_LOCK:
+        if MODEL_STATE["training_artifacts"] is not None:
+            return True
+        if MODEL_STATE["frame_loading"]:
+            return False
+        MODEL_STATE["frame_loading"] = True
+
+    try:
+        training_artifacts = prepare_training_artifacts()
+        with MODEL_LOCK:
+            MODEL_STATE["training_artifacts"] = training_artifacts
+            MODEL_STATE["source_summary"] = training_artifacts.source_summary
+        return True
+    except Exception as error:  # noqa: BLE001
+        with MODEL_LOCK:
+            MODEL_STATE["error"] = str(error)
+        return False
+    finally:
+        with MODEL_LOCK:
+            MODEL_STATE["frame_loading"] = False
 
 
 def _retrain_model_state(include_pending_demo: bool = False) -> None:
@@ -130,6 +153,7 @@ def health() -> dict[str, str | bool | None]:
         "status": "ok",
         "artifact_ready": bool(MODEL_STATE["ready"]),
         "loading": bool(MODEL_STATE["loading"]),
+        "frame_loading": bool(MODEL_STATE["frame_loading"]),
         "training": bool(MODEL_STATE["training"]),
         "bootstrapped_artifact": bool(MODEL_STATE["bootstrapped_artifact"]),
         "error": MODEL_STATE["error"],
@@ -174,6 +198,12 @@ def predict(request: PredictionRequest) -> dict:
         raise HTTPException(
             status_code=503,
             detail="Recommendation model is warming up. Please try again shortly.",
+        )
+
+    if not _ensure_training_artifacts_loaded():
+        raise HTTPException(
+            status_code=503,
+            detail="Recommendation feature frame is still loading. Please try again shortly.",
         )
 
     try:

@@ -52,3 +52,4 @@ fastapi*.log
 next-env.d.ts
 
 .vercel
+next.local.log
